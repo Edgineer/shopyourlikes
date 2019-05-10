@@ -18,7 +18,7 @@ public class ReactController {
     @Autowired
     protected ViewResolver viewResolver;
 
-    private static final String reactTemplate = "react/index.html";
+        private static final String reactTemplate = "react/index.html";
 
     @RequestMapping(value = "/", method= RequestMethod.GET, produces="text/html")
     public void reactView(HttpServletRequest request, HttpServletResponse response) {
