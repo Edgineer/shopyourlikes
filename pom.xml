@@ -12,7 +12,6 @@
 
   <modules>
     <module>model</module>
-    <!--<module>core</module>-->
     <module>webapp</module>
   </modules>
 
