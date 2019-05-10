@@ -1,4 +1,4 @@
-package com.connexity.demo.model;
+package com.connexity.demo.packUser;
 
 import java.time.LocalDate;
 import lombok.Data;

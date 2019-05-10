@@ -1,4 +1,4 @@
-package com.connexity.demo.model;
+package com.connexity.demo.packLink;
 
 import lombok.Data;
 
@@ -19,5 +19,10 @@ public class Link {
         this.username = username;
         this.title = title;
         this.url = url;
+    }
+    Link(){
+        this.username = "username";
+        this.title = "title";
+        this.url = "url";
     }
 }

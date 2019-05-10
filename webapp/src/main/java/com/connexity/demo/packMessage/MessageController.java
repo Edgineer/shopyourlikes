@@ -1,6 +1,6 @@
-package com.connexity.demo.controller;
+package com.connexity.demo.packMessage;
 
-import com.connexity.demo.model.Message;
+//import com.connexity.demo.Message;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

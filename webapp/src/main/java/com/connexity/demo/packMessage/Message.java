@@ -1,4 +1,4 @@
-package com.connexity.demo.model;
+package com.connexity.demo.packMessage;
 
 
 import java.time.LocalDate;
