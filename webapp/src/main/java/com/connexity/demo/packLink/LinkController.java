@@ -2,13 +2,7 @@ package com.connexity.demo.packLink;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class LinkController {
@@ -33,7 +27,7 @@ public class LinkController {
         return repository.save(newLink);
     }
 
-    // TODO: Function to deal with already existing priority
+
     @PutMapping("/links/{id}")
     Link replaceLink(@RequestBody Link newLink, @PathVariable Long id){
         return repository.findById(id)
@@ -55,4 +49,18 @@ public class LinkController {
     void deleteLink(@PathVariable Long id){
         repository.deleteById(id);
     }
+
+    void isUnique(@RequestBody Link link)
+    {
+        //check to see if link url already exists
+
+    }
+
+    @RequestMapping("/byUsername/{username}")
+    List<Link> byUsername(@PathVariable(value="username") String username)
+    {
+        return repository.findAllByUsernameIgnoreCase(username);
+    }
+
+
 }
