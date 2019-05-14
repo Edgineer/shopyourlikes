@@ -17,12 +17,8 @@ public class LinkController {
         return repository.findAll();
     }
 
-    //@GetMapping("/links/{username}")
-    //List<Link> all(){
-    //    return repository.findAll();
-    //}
-
-    @PostMapping("links")
+    // First check with current cookie before executing this
+    @PostMapping("/links")
     Link createLink(@RequestBody Link newLink){
         return repository.save(newLink);
     }
@@ -45,9 +41,17 @@ public class LinkController {
                 });
     }
 
+    // First check with current cookie before executing this
     @DeleteMapping("/links/{id}")
     void deleteLink(@PathVariable Long id){
         repository.deleteById(id);
+    }
+
+    // Get all links for a given username
+    @RequestMapping("/links/{username}")
+    List<Link> byUsername(@PathVariable(value="username") String username)
+    {
+        return repository.findAllByUsernameIgnoreCase(username);
     }
 
     void isUnique(@RequestBody Link link)
@@ -55,12 +59,5 @@ public class LinkController {
         //check to see if link url already exists
 
     }
-
-    @RequestMapping("/byUsername/{username}")
-    List<Link> byUsername(@PathVariable(value="username") String username)
-    {
-        return repository.findAllByUsernameIgnoreCase(username);
-    }
-
 
 }
