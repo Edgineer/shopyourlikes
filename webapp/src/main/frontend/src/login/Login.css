@@ -1,0 +1,48 @@
+
+.Login-box {
+    background-color: white;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    margin: auto;
+    text-align: left;
+    width: 40%;
+  
+  }
+  
+.Login-title {
+    background-color: #5BD9E7;
+    height:100vh;
+    margin:0;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+}
+  
+#Login-subtext {
+    color: #A5A5B2;
+    line-height: 0;
+    font-weight: 20;
+}
+  
+#Login-button {
+    background-color: #FF6666;
+    color: wheat;
+    margin: auto;
+    position: relative;
+    padding: 10px;
+    right: 19px;
+    text-align: center;
+    width: 50%;
+}
+  
+#New-account-link {
+    text-align: center;
+}
+
+#Login-logo {
+    padding: 30px;
+    margin: auto;
+    position: relative;
+    left: 85px; 
+}
