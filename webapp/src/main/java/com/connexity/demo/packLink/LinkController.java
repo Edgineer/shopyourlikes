@@ -2,13 +2,7 @@ package com.connexity.demo.packLink;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class LinkController {
@@ -23,17 +17,13 @@ public class LinkController {
         return repository.findAll();
     }
 
-    //@GetMapping("/links/{username}")
-    //List<Link> all(){
-    //    return repository.findAll();
-    //}
-
-    @PostMapping("links")
+    // First check with current cookie before executing this
+    @PostMapping("/links")
     Link createLink(@RequestBody Link newLink){
         return repository.save(newLink);
     }
 
-    // TODO: Function to deal with already existing priority
+    // First check with current cookie before executing this
     @PutMapping("/links/{id}")
     Link replaceLink(@RequestBody Link newLink, @PathVariable Long id){
         return repository.findById(id)
@@ -51,8 +41,23 @@ public class LinkController {
                 });
     }
 
+    // First check with current cookie before executing this
     @DeleteMapping("/links/{id}")
     void deleteLink(@PathVariable Long id){
         repository.deleteById(id);
     }
+
+    // Get all links for a given username
+    @RequestMapping("/links/{username}")
+    List<Link> byUsername(@PathVariable(value="username") String username)
+    {
+        return repository.findAllByUsernameIgnoreCase(username);
+    }
+
+    void isUnique(@RequestBody Link link)
+    {
+        //check to see if link url already exists
+
+    }
+
 }
