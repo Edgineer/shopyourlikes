@@ -2,30 +2,36 @@ package com.connexity.demo.packLink;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@RestController //tells Spring this class will be requested by URL and will return data to the requester
+@RequestMapping("/links")
 public class LinkController {
-    private final LinkRepository repository;
+    @Autowired //creates an instance of the LinkRepository object
+    private LinkRepository repository;
 
-    LinkController(LinkRepository repository){
-        this.repository = repository;
-    }
-
-    @GetMapping("/links")
-    List<Link> all(){
+    @GetMapping("/")
+    public List<Link> all(){
         return repository.findAll();
     }
 
-    // First check with current cookie before executing this
-    @PostMapping("/links")
+    //@GetMapping("/links/{username}")
+    //List<Link> all(){
+    //    return repository.findAll();
+    //}
+
+    @PostMapping("/")
     Link createLink(@RequestBody Link newLink){
-        return repository.save(newLink);
+        newLink.set_id(ObjectId.get());
+        repository.save(newLink);
+        return newLink;
     }
 
 
-    @PutMapping("/links/{id}")
-    Link replaceLink(@RequestBody Link newLink, @PathVariable Long id){
+    @PutMapping("/{id}")
+    Link replaceLink(@RequestBody Link newLink, @PathVariable String id){
         return repository.findById(id)
                 .map(link -> {
                     // TODO: Insert error checking
@@ -36,22 +42,14 @@ public class LinkController {
                 })
                 .orElseGet(()-> {
                     // TODO: Shouldn't do anything if ID doesn't exist
-                    newLink.setId(id);
+                    //newLink.setId(id);
                     return repository.save(newLink);
                 });
     }
 
-    // First check with current cookie before executing this
-    @DeleteMapping("/links/{id}")
-    void deleteLink(@PathVariable Long id){
+    @DeleteMapping("/{id}")
+    void deleteLink(@PathVariable String id){
         repository.deleteById(id);
-    }
-
-    // Get all links for a given username
-    @RequestMapping("/links/{username}")
-    List<Link> byUsername(@PathVariable(value="username") String username)
-    {
-        return repository.findAllByUsernameIgnoreCase(username);
     }
 
     void isUnique(@RequestBody Link link)
@@ -60,4 +58,9 @@ public class LinkController {
 
     }
 
+    @GetMapping("/{username}")
+    List<Link> byUsername(@PathVariable(value="username") String username)
+    {
+        return repository.findAllByUsernameIgnoreCase(username);
+    }
 }

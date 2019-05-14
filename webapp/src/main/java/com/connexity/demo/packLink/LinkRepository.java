@@ -1,12 +1,12 @@
 package com.connexity.demo.packLink;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-interface LinkRepository extends JpaRepository<Link, Long> {
+@RepositoryRestResource(collectionResourceRel = "link", path = "links")
+interface LinkRepository extends MongoRepository<Link, String> {
     // TODO: Queries
-
-    List<Link> findAllByUsernameIgnoreCase(String username);
-
+    List<Link> findAllByUsernameIgnoreCase(@Param("username") String username);
 }
