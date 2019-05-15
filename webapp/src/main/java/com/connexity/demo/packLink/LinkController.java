@@ -52,15 +52,15 @@ public class LinkController {
         repository.deleteById(id);
     }
 
-    void isUnique(@RequestBody Link link)
-    {
+    void isUnique(@RequestBody Link link) {
         //check to see if link url already exists
 
     }
 
+
+
     @GetMapping("/{username}")
-    List<Link> byUsername(@PathVariable(value="username") String username)
-    {
-        return repository.findAllByUsernameIgnoreCase(username);
+    List<Link> byUsername(@PathVariable(value="username") String username) {
+        return repository.findAllByUsernameIgnoreCaseOrderByPriority(username);
     }
 }
