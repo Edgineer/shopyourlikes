@@ -8,5 +8,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(collectionResourceRel = "link", path = "links")
 interface LinkRepository extends MongoRepository<Link, String> {
     // TODO: Queries
-    List<Link> findAllByUsernameIgnoreCase(@Param("username") String username);
+    List<Link> findAllByUsernameIgnoreCaseOrderByPriority(@Param("username") String username);
 }
