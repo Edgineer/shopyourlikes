@@ -7,6 +7,7 @@ import './../App.css';
 //var listLinks = [{title: "Google", url: "http://www.google.com"}, {title: "Reddit", url: "http://www.reddit.com"}, {title: "Youtube", url: "http://www.youtube.com"}];
 
 const MESSAGE_URL = "/links";
+const USER = "Matt";
 
 class Linklist extends Component {
 
@@ -18,7 +19,8 @@ class Linklist extends Component {
         username: "",
         title: "",
         url: "",
-        priority: 0
+        priority: 0,
+        id: ""
     };
   }
 
@@ -38,10 +40,12 @@ class Linklist extends Component {
     this.setState({ priority: event.target.value });
   }
 
+  handleDeleteChange = event => {
+    this.setState({ id: event.target.value });
+  }
+
   handleSubmit = event => {
     event.preventDefault();
-
-    //alert(this.state.title);
 
     const userLink = {
       "username": this.state.username,
@@ -50,11 +54,25 @@ class Linklist extends Component {
       "priority": this.state.priority
     };
 
-    //alert(userLink.username);
+    //alert(JSON.stringify(userLink, null, 4));
 
-    axios.post(MESSAGE_URL, { userLink })
+    axios.post(MESSAGE_URL, userLink )
       .then(res => {
-        //alert(res.data);
+        //alert(JSON.stringify(res.data, null, 4));
+        this.fetchMessage();
+      })
+  }
+
+  handleDeleteSubmit = event => {
+    event.preventDefault();
+
+    //const userLink = {
+    //  "id": this.state.id
+    //};
+
+    axios.delete(MESSAGE_URL +  "/" + this.state.id)
+      .then(res => {
+        //alert(JSON.stringify(res.data, null, 4));
         this.fetchMessage();
       })
   }
@@ -66,7 +84,8 @@ class Linklist extends Component {
   async fetchMessage() {
     try {
       //response.data contains an array of JavaScript objects
-        const response = await axios.get(MESSAGE_URL);
+        const response = await axios.get(MESSAGE_URL + "/" + USER);
+        //alert(JSON.stringify(response.data, null, 4));
         this.setState({linklist: response.data});
     } catch (error) {
         this.setState({error: "Error!"});
@@ -92,13 +111,32 @@ class Linklist extends Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>
-            Add link here:
+            Add New Link:<br></br>
+            Username:
             <input type="text" name="username" onChange={this.handleChangeUsername} />
+            <br></br>
+            Title:
             <input type="text" name="title" onChange={this.handleChangeTitle} />
+            <br></br>
+            Url:
             <input type="text" name="url" onChange={this.handleChangeURL} />
+            <br></br>
+            Priority:
             <input type="text" name="priority" onChange={this.handleChangePriority} />
+            <br></br>
           </label>
           <button type="submit">Add new link</button>
+        </form>
+      </div>
+<br></br>
+<br></br>
+      <div>
+        <form onSubmit={this.handleDeleteSubmit}>
+          <label>
+            Enter ID of Post to delete:
+            <input type="text" name="id" onChange={this.handleDeleteChange} />
+          </label>
+          <button type="submit">Delete Post</button>
         </form>
       </div>
 
