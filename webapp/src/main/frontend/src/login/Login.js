@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './../logo.svg';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Linklist from ".././linklist/Linklist"
 import logoColor from ".././img/logoColor.svg"
 import './../App.css';
 import './Login.css';
@@ -10,7 +11,12 @@ class Login extends Component {
     super(props);
     this.state = {
       signIn: true,
+      username: ""
     }
+  }
+
+  handleChangeUsername = event => {
+    this.setState({ username: event.target.value });
   }
 
   handleNewAccount() {
@@ -33,13 +39,14 @@ class Login extends Component {
 
 
             <form>
-              <input type="text" placeholder="Username" ></input>
+              <input type="text" placeholder="Username" name="username" onChange={this.handleChangeUsername} ></input>
               <br />
               <input type="text" placeholder="Password"></input>
             </form>
 
             <br/>
-            <p id="Login-button"><Link to="/">Log In</Link></p>
+            <p id="Login-button"><Link to={{pathname: '/linktree', state: {userVal: this.state.username}}} >Log In</Link></p>
+            
             <br/>
           </ul>
 
