@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './App.css';
 import Linklist from "./linklist/Linklist"
 import Login from "./login/Login.js"
+import Tree from "./tree/Tree.js"
 import logoColor from "./img/logoColor.svg"
 
 /* border-left: 5px solid red;
@@ -30,6 +31,7 @@ class App extends Component {
         <Route exact path="/" component={Login}/>
         <Route exact path="/linktree" component={Linklist}/>
         <Route exact path="/login" component={Login}/>
+        <Route exact path="/tree/:user" component={Tree}/>
       </div>
       </Router>
     );
