@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios/index";
 import './../App.css';
 
@@ -132,6 +133,12 @@ class Linklist extends Component {
           <button type="submit">Delete Post</button>
         </form>
       </div>
+
+      <br></br>
+
+      <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button">See Link List</button></Link>
+
+      <br></br>
 
       </div>
     );
