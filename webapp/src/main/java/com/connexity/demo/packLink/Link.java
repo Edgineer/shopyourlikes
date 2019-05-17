@@ -20,12 +20,12 @@ public class Link {
         this.url = url;
         this.priority = priority;
     }
-//    Link(){
-//        this.username = "username";
-//        this.title = "title";
-//        this.url = "url";
-//        this.priority = 1;
-//    }
+    Link(){
+        this.username = "username";
+        this.title = "title";
+        this.url = "url";
+        this.priority = 1;
+    }
     // ObjectId needs to be converted to string
     public String get_id() {
         return _id.toHexString();

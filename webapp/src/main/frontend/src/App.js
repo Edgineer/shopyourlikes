@@ -3,7 +3,11 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './App.css';
 import Linklist from "./linklist/Linklist"
 import Login from "./login/Login.js"
+<<<<<<< HEAD
 import InstagramLogin from "./instagramlogin/InstagramLogin.js"
+=======
+import Tree from "./tree/Tree.js"
+>>>>>>> 6bc4c23ab3b6a6d247400233457ca8b84715d570
 import logoColor from "./img/logoColor.svg"
 
 /* border-left: 5px solid red;
@@ -31,7 +35,11 @@ class App extends Component {
         <Route exact path="/" component={Login}/>
         <Route exact path="/linktree" component={Linklist}/>
         <Route exact path="/login" component={Login}/>
+<<<<<<< HEAD
         <Route exact path="/insta_auth" component={InstagramLogin}/>
+=======
+        <Route exact path="/tree/:user" component={Tree}/>
+>>>>>>> 6bc4c23ab3b6a6d247400233457ca8b84715d570
       </div>
       </Router>
     );
