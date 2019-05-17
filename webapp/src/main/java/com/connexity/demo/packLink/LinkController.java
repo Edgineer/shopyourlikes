@@ -35,7 +35,7 @@ public class LinkController {
 
     @PostMapping("/")
     ResponseEntity<?> createLink(@RequestBody Link newLink){
-
+        System.out.println("inside function");
         if(urlRepeated(newLink.getUsername(), newLink.getUrl())) {  //url already exists
             System.out.println("url already exists");
             return new ResponseEntity<String>("URL already exists", HttpStatus.BAD_REQUEST);  //getLink(newLink.getUsername(), newLink.getUrl())
@@ -80,9 +80,11 @@ public class LinkController {
         return repository.findAllByUsernameIgnoreCaseOrderByPriority(username);
     }
 
+
+    //this function returns the Link object that has url as its url
     Link getLink(String username, String url) {
         return repository.findByUsernameAndUrlIgnoreCase(username, url);
     }
 
-    //this function returns the Link object that has url as its url
+
 }

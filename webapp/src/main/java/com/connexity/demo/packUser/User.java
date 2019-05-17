@@ -1,29 +1,93 @@
-//package com.connexity.demo.packUser;
-//
-//import java.time.LocalDate;
-//import lombok.Data;
-//
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.Id;
-//
-//@Data
-//@Entity
-//public class User {
-//    private @Id @GeneratedValue Long id;
-//    private String firstname;
-//    private String lastname;
-//    private String username;
-//    private String hash;
-//    private String email;
-//    private LocalDate date_joined;
-//
-//    User (String firstname, String lastname, String username, String hash, String email){
-//        this.firstname = firstname;
-//        this.lastname = lastname;
-//        this.username = username; //check it does not already exist
-//        this.hash = hash;
-//        this.email = email;
-//        this.date_joined = LocalDate.now();
-//    }
-//}
+package com.connexity.demo.packUser;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+
+import java.time.LocalDate;
+import lombok.Data;
+
+public class User {
+    @Id
+    private ObjectId _id;
+    private String firstname;
+    private String lastname;
+    private String username;
+    private String email;
+    private String hash;
+    private LocalDate datejoined;
+
+    User(String first, String last, String username, String email, String hash, LocalDate datejoined){
+        this.firstname = first;
+        this.lastname = last;
+        this.username = username;
+        this.email = email;
+        this.hash = hash;
+        this.datejoined = datejoined;
+    }
+    User(){
+        this.firstname = "first";
+        this.lastname = "last";
+        this.username = "username";
+        this.email = "default@gmail.com";
+        this.hash = "";
+        this.datejoined = LocalDate.now();
+    }
+
+    // ObjectId needs to be converted to string
+    public String get_id() {
+        return _id.toHexString();
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String getUsername(){
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public LocalDate getDatejoined() {
+        return datejoined;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public void setDatejoined(LocalDate datejoined) {
+        this.datejoined = datejoined;
+    }
+
+    public void set_id(ObjectId _id){
+        this._id = _id;
+    }
+}

@@ -1,10 +1,11 @@
-//package com.connexity.demo.packUser;
-//
-//import org.springframework.data.jpa.repository.JpaRepository;
-//
-//import java.util.List;
-//
-//interface UserRepository extends JpaRepository<User, Long> {
-//    // TODO: Queries
-//    List<User> findAllByEmailIgnoreCase(String email);
-//}
+package com.connexity.demo.packUser;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import java.util.List;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+@RepositoryRestResource(collectionResourceRel = "user", path = "users")
+interface UserRepository extends MongoRepository<User, String> {
+
+}

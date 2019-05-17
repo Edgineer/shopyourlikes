@@ -1,23 +1,37 @@
-//package com.connexity.demo.packUser;
-//
-//import java.time.LocalDate;
-//import java.util.List;
-//
-//import org.springframework.web.bind.annotation.*;
-//
-//@RestController
-//public class UserController {
-//    private final UserRepository repository;
-//
-//    UserController(UserRepository repository){
-//        this.repository = repository;
-//    }
-//
-//    // get all user objects
-//    @GetMapping("/users")
-//    List<User> all(){
-//        return repository.findAll();
-//    }
+package com.connexity.demo.packUser;
+
+import java.util.List;
+
+import com.connexity.demo.packLink.Link;
+import com.connexity.demo.packUser.UserRepository;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
+
+@RestController
+public class UserController {
+    @Autowired //creates an instance of the LinkRepository object
+    private UserRepository repository;
+
+    @GetMapping("/")
+    public ResponseEntity<List<User>> all(){
+        return new ResponseEntity<>(repository.findAll(),HttpStatus.OK);
+    }
+
+    @PostMapping("/")
+    ResponseEntity<?> createUser(@RequestBody User newUser){
+        newUser.set_id(ObjectId.get());
+        repository.save(newUser);
+        return new ResponseEntity<User>(newUser, HttpStatus.ACCEPTED);
+    }
+
+}
+
+
 ///*
 //    // Get the user when logging in
 //    @GetMapping("/users/login")
@@ -39,12 +53,7 @@
 //                    return newUser;
 //                });
 //    }
-//*/
-//    // create new user given new user object
-//    @PostMapping("/users/addnew")
-//    User createLink(@RequestBody User newUser){
-//        return repository.save(newUser);
-//    }
+
 //
 //    // update user with {id} given modified user object
 //    @PutMapping("/users/{id}")
