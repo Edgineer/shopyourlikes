@@ -3,15 +3,22 @@ import logo from './../logo.svg';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Linklist from ".././linklist/Linklist"
 import logoColor from ".././img/logoColor.svg"
+import instagram_logo from "./instagram_logo.svg"
 import './../App.css';
 import './Login.css';
+
+const INSTA_API = "https://api.instagram.com/oauth/authorize/?" +
+                "client_id=0730e096783745e7a0da8eed3152b8f6" + "&" + 
+                "redirect_uri=http://localhost:3000/insta_auth" + "&" +
+                "response_type=token";
+
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       signIn: true,
-      username: ""
+      username: "",
     }
   }
 
@@ -34,7 +41,7 @@ class Login extends Component {
             <img id="Login-logo" src={logoColor} alt="ShopYourLikes"/>
             {/* <h2 id="Login-subtext">Login to continue</h2> */}
             <hr width="87%" align="left"/>
-            <p>Login with instagram</p>
+            <a href={INSTA_API}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
             <hr width="87%" align="left" color="#a5a5b2"/>
 
 
