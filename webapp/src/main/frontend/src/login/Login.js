@@ -52,7 +52,7 @@ class Login extends Component {
             </form>
 
             <br/>
-            <p id="Login-button"><Link to={{pathname: '/linktree', state: {userVal: this.state.username}}} >Log In</Link></p>
+            <Link to={{pathname: '/linktree', state: {userVal: this.state.username}}} ><p id="Login-button">Log In</p></Link>
             
             <br/>
           </ul>
