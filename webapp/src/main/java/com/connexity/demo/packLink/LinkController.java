@@ -1,7 +1,7 @@
 package com.connexity.demo.packLink;
 
+import java.util.LinkedList;
 import java.util.List;
-
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,34 +15,22 @@ public class LinkController {
     @Autowired //creates an instance of the LinkRepository object
     private LinkRepository repository;
 
-
-
     @GetMapping("/")
     public ResponseEntity<List<Link>> all(){
-        System.out.println("getMapping");
         return new ResponseEntity<>(repository.findAll(),HttpStatus.OK);
     }
-//
-//    @GetMapping("/")
-//    public List<Link> all(){
-//        return repository.findAll();
-//    }
 
-    //@GetMapping("/links/{username}")
-    //List<Link> all(){
-    //    return repository.findAll();
-    //}
 
     @PostMapping("/")
     ResponseEntity<?> createLink(@RequestBody Link newLink){
-        System.out.println("inside function");
         if(urlRepeated(newLink.getUsername(), newLink.getUrl())) {  //url already exists
-            System.out.println("url already exists");
-            return new ResponseEntity<String>("URL already exists", HttpStatus.BAD_REQUEST);  //getLink(newLink.getUsername(), newLink.getUrl())
+            return new ResponseEntity<String>("URL already exists", HttpStatus.BAD_REQUEST);
         }
-        newLink.set_id(ObjectId.get());
-        repository.save(newLink);
-        return new ResponseEntity<Link>(newLink, HttpStatus.ACCEPTED);
+        else {
+            newLink.set_id(ObjectId.get());
+            repository.save(newLink);
+            return new ResponseEntity<Link>(newLink, HttpStatus.ACCEPTED);
+        }
     }
 
 
@@ -68,23 +56,27 @@ public class LinkController {
         repository.deleteById(id);
     }
 
+
     //returns 1 if the url already exists for this username
     private boolean urlRepeated(String username, String url) {
-        List<String> urlList = repository.findUrlByUsernameIgnoreCase(username);
-
+        List<String> urlList = urls(username);
         return urlList.contains(url);
+    }
+
+
+    //returns a list of urls associated with username
+    @GetMapping("/test/{username}")
+    List<String> urls(@PathVariable(value="username") String username) {
+        List<Link> links= repository.findAllByUsernameIgnoreCaseOrderByPriority(username);
+        List<String> url = new LinkedList<String>();
+        for(int i = 0; i < links.size(); i++)
+            url.add((links.get(i)).getUrl());
+        return url;
     }
 
     @GetMapping("/{username}")
     List<Link> byUsername(@PathVariable(value="username") String username) {
         return repository.findAllByUsernameIgnoreCaseOrderByPriority(username);
     }
-
-
-    //this function returns the Link object that has url as its url
-    Link getLink(String username, String url) {
-        return repository.findByUsernameAndUrlIgnoreCase(username, url);
-    }
-
 
 }
