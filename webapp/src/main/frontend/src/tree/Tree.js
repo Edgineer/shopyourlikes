@@ -48,16 +48,17 @@ class Tree extends Component {
           } 
     }
 
-    mapBackground() {
-        return <img src={this.userImage} className="Background-image"/>
-    }
-
     render() {
         const {match: {params}} = this.props;
 
+        //background image
+        let backgroundStyle = {
+            backgroundImage: 'url(' + this.userImage + ')',
+            overflow:'hidden',
+        };
+
         return (
-            <div id="Background" >
-                {this.mapBackground()}
+            <div  style={backgroundStyle} id="Background">
                 <br/>
                 <h3 id="Username"> @{this.username} </h3>
                 {this.state.listOfLinks.map(function(name, index){
