@@ -8,7 +8,8 @@ import './../App.css';
 //var listLinks = [{title: "Google", url: "http://www.google.com"}, {title: "Reddit", url: "http://www.reddit.com"}, {title: "Youtube", url: "http://www.youtube.com"}];
 
 const MESSAGE_URL = "/links";
-//const USER = "Matt";
+const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dqm1bxfif/'
+const CLOUDINARY_UPLOAD_PRESET = 'djyrqv1v'
 
 class Linklist extends Component {
 
@@ -21,7 +22,8 @@ class Linklist extends Component {
         title: "",
         url: "",
         priority: 0,
-        deleteTitle: ""
+        deleteTitle: "",
+        selectedFile: null,
     };
   }
 
@@ -85,12 +87,47 @@ class Linklist extends Component {
     } 
   } 
 
+  //this function caches the uploaded file
   fileChangedHandler = (event) => {
     this.setState({selectedFile: event.target.files[0]})
+    console.log(event)
   }
 
-  uploadHandler = () => {
-    
+  //this function handles the case in which the user confirms their picture selection
+  //it sends the selected picture to the cloudinary service
+  uploadImageHandler = () => {
+    //modify the api url to include the upload parameter
+    var url = CLOUDINARY_URL + 'upload'
+
+    //check to see there was any file uploaded
+    //if there isn't a file uploaded then return without doing anything
+    if (this.state.selectedFile == null)
+    {
+      console.log("Tried to upload but nothing was selected!!\n")
+      return
+    }
+
+    //take the file from the input and copy it over with the name of the user
+    var blob = this.state.selectedFile.slice(0, this.state.selectedFile.size, 'image/jpg')
+    var clone = new File([blob], this.props.location.state.userVal + '.jpg', {type: 'image/jpg'})
+
+    //create the arguments for the api call
+    var formData = new FormData()
+    formData.append('file', clone)
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+
+    //configure the headers for the axios request
+    const config = {
+      headers: { "X-Requested-With": "XMLHttpRequest" },
+    };
+
+    //make the axios request
+    axios.post(url, formData, config)
+        .then(function(res) {
+          console.log(res)
+        }).catch(function(err){
+          console.error(err)
+        });
   }
 
   render() {
@@ -153,7 +190,7 @@ class Linklist extends Component {
       <div>
         <input type="file" onChange={this.fileChangedHandler}/>
         <br/>
-        <button onClick={this.uploadHandler}>Upload!</button>
+        <button onClick={this.uploadImageHandler}>Upload!</button>
         <br/>
       </div>
       

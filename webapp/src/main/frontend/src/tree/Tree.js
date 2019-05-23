@@ -16,7 +16,7 @@ class Tree extends Component {
 
         //get image if it exists
         try {
-            this.userImage = require("./backgroundImages/" + this.username + ".jpg")
+            this.userImage = "http://res.cloudinary.com/dqm1bxfif/image/upload/" + this.username + ".jpg"
         }
         catch (e){
             this.hasUserImage = false
