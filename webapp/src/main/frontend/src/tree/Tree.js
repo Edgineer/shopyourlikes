@@ -14,6 +14,14 @@ class Tree extends Component {
         const {match: {params }} = this.props;
         this.username = params.user;
 
+        //get image if it exists
+        try {
+            this.userImage = require("./backgroundImages/" + this.username + ".jpg")
+        }
+        catch (e){
+            this.hasUserImage = false
+        }
+
         //save the user's info
         this.state = {
             listOfLinks: [],
@@ -40,13 +48,16 @@ class Tree extends Component {
           } 
     }
 
-
+    mapBackground() {
+        return <img src={this.userImage} className="Background-image"/>
+    }
 
     render() {
         const {match: {params}} = this.props;
 
         return (
-            <div id="Background">
+            <div id="Background" >
+                {this.mapBackground()}
                 <br/>
                 <h3 id="Username"> @{this.username} </h3>
                 {this.state.listOfLinks.map(function(name, index){

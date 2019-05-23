@@ -85,6 +85,14 @@ class Linklist extends Component {
     } 
   } 
 
+  fileChangedHandler = (event) => {
+    this.setState({selectedFile: event.target.files[0]})
+  }
+
+  uploadHandler = () => {
+    
+  }
+
   render() {
 
     return (
@@ -139,6 +147,16 @@ class Linklist extends Component {
       <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button">See Link List</button></Link>
 
       <br></br>
+
+      <hr/>
+      
+      <div>
+        <input type="file" onChange={this.fileChangedHandler}/>
+        <br/>
+        <button onClick={this.uploadHandler}>Upload!</button>
+        <br/>
+      </div>
+      
 
       </div>
     );

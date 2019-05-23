@@ -1,6 +1,6 @@
 
 #Background {
-    background-color: #5BD9E7;
+    /* background-color: #5BD9E7; */
     z-index: 0;
     width: 100%;
     height:100vh;
@@ -8,8 +8,10 @@
 }
 
 #Username {
+    z-index: 2;
+
     text-align: center;
-    padding: 20px;
+    padding: 20px ;
     color: black;
     font-size: 50px;    
 }
@@ -19,12 +21,13 @@
     width: 100%;
     padding: 10px;
     text-align: center;
-    background-color: #5BD9E7
+    /* background-color: #5BD9E7 */
     /* filter: invert(100%) */
 }
 
 a {
     text-decoration: none;
+    z-index: inherit;
 }
 
 .Link-box {
@@ -43,5 +46,15 @@ a {
     color: black;
     font-size: 50px;
 
-    z-index: 1;
+    z-index: 2;
+}
+
+
+.Background-image {
+    margin: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    position: absolute;
+    z-index: -1;
 }
