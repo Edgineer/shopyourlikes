@@ -31,6 +31,7 @@ public class LinkController {
             repository.save(newLink);
             return new ResponseEntity<Link>(newLink, HttpStatus.ACCEPTED);
         }
+        //return new ResponseEntity<>("WHAT THE HECK", HttpStatus.BAD_REQUEST);
     }
 
 
