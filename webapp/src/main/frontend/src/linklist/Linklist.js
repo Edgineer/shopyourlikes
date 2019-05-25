@@ -184,6 +184,11 @@ class Linklist extends Component {
       <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button">See Link List</button></Link>
 
       <br></br>
+      <br></br>
+
+      <Link to="/stats"><button type="button">Statistics Report</button></Link>
+
+      <br></br>
 
       <hr/>
       

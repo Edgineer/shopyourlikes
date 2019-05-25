@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import './App.css';
 import Linklist from "./linklist/Linklist"
 import Login from "./login/Login.js"
+import Stats from "./Stats/Stats.js"
 import InstagramLogin from "./instagramlogin/InstagramLogin.js"
 import Tree from "./tree/Tree.js"
 import logoColor from "./img/logoColor.svg"
@@ -34,6 +35,7 @@ class App extends Component {
         <Route exact path="/login" component={Login}/>
         <Route exact path="/insta_auth" component={InstagramLogin}/>
         <Route exact path="/tree/:user" component={Tree}/>
+        <Route exact path="/stats" component={Stats}/>
       </div>
       </Router>
     );
