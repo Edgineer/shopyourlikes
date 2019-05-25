@@ -14,13 +14,7 @@ class Tree extends Component {
         const {match: {params }} = this.props;
         this.username = params.user;
 
-        //get image if it exists
-        try {
-            this.userImage = "http://res.cloudinary.com/dqm1bxfif/image/upload/" + this.username + ".jpg"
-        }
-        catch (e){
-            this.hasUserImage = false
-        }
+        this.userImage = "http://res.cloudinary.com/dqm1bxfif/image/upload/" + this.username + ".jpg"
 
         //save the user's info
         this.state = {
@@ -32,6 +26,14 @@ class Tree extends Component {
             priority: 0,
             deleteTitle: ""
         };
+    }
+
+    //https://stackoverflow.com/questions/26630650/detect-404-error-on-page-load
+    urlExists(url) {
+        var http = new XMLHttpRequest();
+        http.open('HEAD', url, false);
+        http.send();
+        return http.status!=404;
     }
 
     async componentDidMount() {
@@ -52,7 +54,7 @@ class Tree extends Component {
         const {match: {params}} = this.props;
 
         //background image
-        let backgroundStyle = {
+        var backgroundStyle = {
             backgroundImage: 'url(' + this.userImage + ')',
             overflow:'hidden',
         };
