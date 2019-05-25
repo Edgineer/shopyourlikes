@@ -3,6 +3,8 @@ a {
     text-decoration: none;
 }
 
+body {background-color: #61dafb;}
+
 .ClicksPerDay-box {
     border-radius: 10px;
     background-color: white;

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {Bar, Line, Pie} from 'react-chartjs-2';
+import {Bar} from 'react-chartjs-2';
 
 
 //bar chart and sample data must be used for
-//clicks per link instead
+//clicks per Day instead
 //this is just for test
 class ClicksPerDay extends Component {
     constructor(props){
@@ -19,21 +19,21 @@ class ClicksPerDay extends Component {
     //use this for personalization in the future
     static defaultProps = {
         displayTitle:true,
-        displayLegend:true,
+        displayLegend:false,
         legendPosition:'bottom',
-        fontSize:25
+        fontSize:20
     }
 
 
     render() {
     return(
         <div className = "ClicksPerDay">
-            <Pie
+            <Bar
                 data = {this.state.ClicksPerDayData}
                 options = {{
                     title:{
                         display:true,
-                        text:'Number of Total Clicks', //per day
+                        text:'Total clicks per month during the past year:', //per Day
                         fontSize:this.props.fontSize
                     },
                     legend:{
