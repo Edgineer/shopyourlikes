@@ -1,0 +1,78 @@
+
+a {
+    text-decoration: none;
+}
+
+body {background-color: #5BD9E7;}
+
+.ClicksPerDay-box {
+    border-radius: 10px;
+    background-color: white;
+    /* border-color: black;
+    border-width: 1px;
+    border-style: solid; */
+    width: 900px;
+    height: 500px;
+    margin: auto;
+    text-align: middle;
+    position: relative;
+}
+
+
+
+.Login-box {
+    border-radius: 10px;
+    background-color: white;
+    /* border-color: black;
+    border-width: 1px;
+    border-style: solid; */
+    width: 380px;
+    height: 500px;
+    margin: auto;
+    text-align: left;
+    position: relative;
+  }
+
+.Login-title {
+    background-color: #5BD9E7;
+    height:100vh;
+    margin:0;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+#Login-subtext {
+    color: #A5A5B2;
+    line-height: 0;
+    font-weight: 20;
+}
+
+#Login-button {
+    border-radius: 5px;
+    background-color: #FF6666;
+    color: white;
+    text-decoration: none;
+    margin: auto;
+    position: absolute;
+    padding: 30px;
+    right: 75px;
+    bottom: 30px;
+    text-align: center;
+    width: 50%;
+}
+
+#New-account-link {
+    text-align: center;
+}
+
+#Login-logo {
+    margin: auto;
+    position: relative;
+    border: none;
+    left: 60px;
+    top: 20px;
+    width: 50%;
+    padding: 10px;
+    padding-bottom: 20px;
+}

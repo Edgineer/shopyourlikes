@@ -15,15 +15,33 @@ public class User {
     private String email;
     private String hash;
     private LocalDate datejoined;
+    private boolean textcolor;
+    private boolean buttonstyle;
+    private boolean profilepic;
+    private int theme;
 
-    User(String first, String last, String username, String email, String hash, LocalDate datejoined){
+    User(String first, String last, String username, String email, String hash){
         this.firstname = first;
         this.lastname = last;
         this.username = username;
         this.email = email;
         this.hash = hash;
-        this.datejoined = datejoined;
+        this.datejoined = LocalDate.now();
     }
+
+    User(String first, String last, String username, String email, String hash, boolean textcolor, boolean buttonstyle, boolean profilepic, int theme){
+        this.firstname = first;
+        this.lastname = last;
+        this.username = username;
+        this.email = email;
+        this.hash = hash;
+        this.datejoined = LocalDate.now();
+        this.textcolor = textcolor;
+        this.buttonstyle = buttonstyle;
+        this.profilepic = profilepic;
+        this.theme = theme;
+    }
+
     User(){
         this.firstname = "first";
         this.lastname = "last";
@@ -31,6 +49,10 @@ public class User {
         this.email = "default@gmail.com";
         this.hash = "";
         this.datejoined = LocalDate.now();
+        this.textcolor = false;
+        this.buttonstyle = false;
+        this.profilepic = false;
+        this.theme = 0;
     }
 
     // ObjectId needs to be converted to string
@@ -62,6 +84,14 @@ public class User {
         return datejoined;
     }
 
+    public boolean getTextcolor() {return textcolor;}
+
+    public boolean getButtonstyle() {return buttonstyle;}
+
+    public boolean getProfilepic() {return profilepic;}
+
+    public int getTheme() {return theme;}
+
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
@@ -73,7 +103,6 @@ public class User {
     public void setUsername(String username){
         this.username = username;
     }
-
 
     public void setEmail(String email) {
         this.email = email;
@@ -89,5 +118,19 @@ public class User {
 
     public void set_id(ObjectId _id){
         this._id = _id;
+    }
+
+    public void setTextcolor(boolean textcolor) {this.textcolor = textcolor;}
+
+    public void setButtonstyle(boolean buttonstyle) {
+        this.buttonstyle = buttonstyle;
+    }
+
+    public void setProfilepic(boolean profilepic) {
+        this.profilepic = profilepic;
+    }
+
+    public void setTheme(int theme) {
+        this.theme = theme;
     }
 }
