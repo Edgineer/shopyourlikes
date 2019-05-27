@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios/index";
 import './../App.css';
+import './Linklist.css';
+
 
 
 //var obj = JSON.parse('{"firstName":"John", "lastName":"Doe"}');
@@ -24,7 +26,19 @@ class Linklist extends Component {
         priority: 0,
         deleteTitle: "",
         selectedFile: null,
+        showMenu: false, //for theme dropdown menu
+        textColor: true, //true: black, false: white
+        bottonStyle: true, //true: filled, false: clear
+        themeSelected: 0, 
     };
+
+    this.showMenu = this.showMenu.bind(this);
+    this.closeMenu = this.closeMenu.bind(this);
+    this.buttonStyleClear = this.buttonStyleClear.bind(this);
+    this.buttonStyleFilled = this.buttonStyleFilled.bind(this);
+    this.textColorBlack = this.textColorBlack.bind(this);
+    this.textColorWhite = this.textColorWhite.bind(this);
+    this.selectNewTheme = this.selectNewTheme.bind(this);
   }
 
   handleChangeTitle = event => {
@@ -95,7 +109,10 @@ class Linklist extends Component {
 
   //this function handles the case in which the user confirms their picture selection
   //it sends the selected picture to the cloudinary service
-  uploadImageHandler = () => {
+  saveSettings = () => {
+    //function call to save the baked in settings to back end
+    this.saveUserSelections()
+
     //modify the api url to include the upload parameter
     var url = CLOUDINARY_URL + 'upload'
 
@@ -130,8 +147,76 @@ class Linklist extends Component {
         });
   }
 
-  render() {
+  //function to save the selections made in the theme menu and
+  // the radio menus regarding the external pages customization
+  saveUserSelections() {
+    //function should save values to variables
 
+    //then make a put call to the backend
+  }
+
+  //both showMenu and closeMenu have been taken from a tutorial at the following link
+  //https://blog.campvanilla.com/reactjs-dropdown-menus-b6e06ae3a8fe
+  showMenu(event) {
+    event.preventDefault();
+
+    this.setState({ showMenu: true } , () => {
+      document.addEventListener('click', this.closeMenu);
+    });
+  }
+
+  closeMenu(event) {
+    this.setState({ showMenu: false } , () => {
+      document.removeEventListener('click', this.closeMenu);
+    });
+  }
+
+  // functions to handle radio buttons
+  buttonStyleClear(event) {
+    this.setState({buttonStyle: false});
+  }
+
+  buttonStyleFilled(event) {
+    this.setState({buttonStyle: true});
+  }
+
+  textColorBlack(event) {
+    this.setState({textColor: true});
+  }
+
+  textColorWhite(event) {
+    this.setState({textColor: false});
+  }
+
+  //functions to handle the setting of the themes
+  selectNewTheme(event) {
+    var newThemeValue;
+
+    switch(event.id) {
+      case "Theme1":
+        newThemeValue = 1;
+        break;
+      case "Theme2":
+        newThemeValue = 2;
+        break;
+      case "Theme3":
+        newThemeValue = 3;
+        break;
+      case "Theme4":
+        newThemeValue = 4;
+        break;
+      case "Theme5":
+        newThemeValue = 5;
+        break;
+      default:
+        newThemeValue = 0;
+    }
+
+    this.setState({themeSelected: newThemeValue});
+  }
+
+
+  render() {
     return (
       <div className="App">
 
@@ -179,7 +264,77 @@ class Linklist extends Component {
         </form>
       </div>
 
-      <br></br>
+      <br/>
+      {/* section for the external page's cosmetic settings */}
+      {/* TODO: make it so both of the radio buttons are automatically
+       selected on whatever the client orginally picked */}
+      <div className="settingsBox">
+
+        <div className="dropdownbtn">
+          <button onClick={this.showMenu} className="themes-button">Themes</button>
+          <br/>
+          {
+            this.state.showMenu
+              ? (
+                <div className="theme-selection-container">
+                  <button id="Default" className="theme-selection" onClick={this.selectNewTheme}>Theme 0</button>
+                  <br/>
+                  <button id="Theme1" className="theme-selection" onClick={this.selectNewTheme}> Theme 1</button>
+                  <br/>
+                  <button id="Theme2" className="theme-selection" onClick={this.selectNewTheme}> Theme 2 </button>
+                  <br/>
+                  <button id="Theme3" className="theme-selection" onClick={this.selectNewTheme}> Theme 3 </button>
+                  <br/>
+                  <button id="Theme4" className="theme-selection" onClick={this.selectNewTheme}> Theme 4 </button>
+                  <br/>
+                  <button id="Theme5" className="theme-selection" onClick={this.selectNewTheme}> Theme 5 </button>
+                </div>
+              )
+              : (
+                null
+              )
+          }
+        </div>
+
+
+        <br/>
+        <br/>
+
+        {/* Options to select black or white text */}
+        <label>White</label>
+        <input type="radio" name="TextColor" input="White"/>
+
+        <label>Black</label>
+        <input type="radio" name="TextColor" input="Black"/>
+
+        <br/>
+        <br/>
+
+        {/* Options to select clear or filled buttons */}
+        <label>Clear</label>
+        <input type="radio" name="ButtonStyle" input="Clear" onClick={this.buttonStyleClear}/>
+
+        <label >Filled</label>
+        <input type="radio" name="ButtonStyle" input="Filled" onClick={this.buttonStyleFilled}/>
+
+        <br/>
+        <br/>
+
+        {/* Form to inputfile */}
+        <div>
+          <input type="file" onChange={this.fileChangedHandler}/>
+          <br/>
+        </div>
+
+        {/* button to save settings   */}
+        <br/>
+        <button onClick={this.saveSettings}>Save!</button>
+        <br/>
+
+      </div>
+
+      <br/>
+      <br/>
 
       <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button">See Link List</button></Link>
 
@@ -192,12 +347,6 @@ class Linklist extends Component {
 
       <hr/>
       
-      <div>
-        <input type="file" onChange={this.fileChangedHandler}/>
-        <br/>
-        <button onClick={this.uploadImageHandler}>Upload!</button>
-        <br/>
-      </div>
       
 
       </div>
