@@ -7,6 +7,9 @@ import instagram_logo from "./instagram_logo.svg"
 import './../App.css';
 import './Login.css';
 
+import axios from "axios/index";
+
+
 const INSTA_API = "https://api.instagram.com/oauth/authorize/?" +
                 "client_id=0730e096783745e7a0da8eed3152b8f6" + "&" + 
                 "redirect_uri=http://localhost:3000/insta_auth" + "&" +
@@ -32,6 +35,41 @@ class Login extends Component {
     });
   }
 
+  handleSubmit(event) {
+    //Prevent page from reloading
+    event.preventDefault();
+
+    //Ask the backend if the username already exists
+    axios.get('/checkUsername/' + this.refs.newUsername.value).then(res => {
+
+      //res is the response we got from the backend, a JSON containing a boolean
+      if(res.data)
+        alert("Username already exists!"); 
+      else if( this.refs.newPassword.value != this.refs.newPasswordRepeat.value)
+        alert("Passwords don't match!");
+      //The data is validated, so we post the new account info
+      else {
+        //Pack the new account info
+        const userInfo = {
+        "firstname": this.refs.newFirst.value, 
+        "lastname": this.refs.newLast.value, 
+        "username": this.refs.newUsername.value, 
+        "email": this.refs.newEmail.value, 
+        "hash": this.refs.newPassword.value};
+
+        //Make the post request
+        axios.post('/', userInfo).then(res => {
+          alert("Your account was created! Please Login.");
+          this.handleNewAccount();
+        });
+    } 
+
+    })
+
+   
+
+  }
+
   render() {
     if (this.state.signIn === true)
     {
@@ -46,9 +84,9 @@ class Login extends Component {
 
 
             <form>
-              <input type="text" placeholder="Username" name="username" onChange={this.handleChangeUsername} ></input>
+              <input type="text" placeholder="Username" name="username" onChange={this.handleChangeUsername} required="required"></input>
               <br />
-              <input type="text" placeholder="Password"></input>
+              <input type="password" placeholder="Password" required="required"></input>
             </form>
 
             <br/>
@@ -71,18 +109,25 @@ class Login extends Component {
             <p>Login with instagram</p>
             <hr width="87%" align="left"/>
 
-            <form>
-              <input type="text" placeholder="Email" ></input>
+            <form onSubmit={this.handleSubmit.bind(this)}>
+              <input type="text" placeholder="First name" ref="newFirst" required="required"></input>
               <br />
-              <input type="text" placeholder="Username" ></input>
+              <input type="text" placeholder="Last name" ref="newLast" required="required"></input>
               <br />
-              <input type="text" placeholder="Password"></input>
+              <input type="text" placeholder="Email" ref="newEmail" required="required"></input>
               <br />
-              <input type="test" placeholder="Repeat password"></input>
+              <input type="text" placeholder="Username" ref="newUsername" required="required"></input>
+              <br />
+              <input type="password" placeholder="Password" ref="newPassword" required="required"></input>
+              <br />
+              <input type="password" placeholder="Re-enter password" ref="newPasswordRepeat" required="required"></input>
+
+              {/* Hidden button, so the button below can link to it*/}
+              <input type="submit" id="submit-form"  class="Hidden-button"/>
             </form>
 
             <br/>
-            <p id="Login-button"><Link to="/">Create Account</Link></p>
+            <p id="Login-button"><label for="submit-form">Create New Account</label></p>
             <br/>
           </ul>
 

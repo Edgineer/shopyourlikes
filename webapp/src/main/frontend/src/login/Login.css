@@ -3,6 +3,10 @@ a {
     text-decoration: none;
 }
 
+.Hidden-button {
+    visibility: hidden;
+}
+
 .Login-box {
     border-radius: 10px;
     background-color: white;

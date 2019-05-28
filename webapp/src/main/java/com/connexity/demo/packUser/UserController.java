@@ -25,9 +25,26 @@ public class UserController {
     @PostMapping("/")
     ResponseEntity<?> createUser(@RequestBody User newUser){
         newUser.set_id(ObjectId.get());
+        String hasher = "HASHED";
+        newUser.setHash(hasher);
         repository.save(newUser);
         return new ResponseEntity<User>(newUser, HttpStatus.ACCEPTED);
     }
+
+    
+    //Checks if username is in the repository
+    @GetMapping("/checkUsername/{username}")
+    Boolean checkUsername(@PathVariable(value="username") String username){
+
+        int count = repository.countByUsernameIgnoreCase(username);
+        if(count > 0)
+            return true;
+        else 
+            return false;
+    
+    }
+    
+    
 
 }
 

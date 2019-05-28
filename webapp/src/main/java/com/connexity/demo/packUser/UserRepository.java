@@ -7,5 +7,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(collectionResourceRel = "user", path = "users")
 interface UserRepository extends MongoRepository<User, String> {
+	int countByUsernameIgnoreCase(@Param("username") String username);
 
 }
