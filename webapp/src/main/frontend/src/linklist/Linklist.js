@@ -172,6 +172,7 @@ class Linklist extends Component {
           axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {});
 
         }
+        this.fetchMessage();
       })
   }
 
