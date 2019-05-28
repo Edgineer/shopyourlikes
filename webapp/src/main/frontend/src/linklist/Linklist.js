@@ -322,12 +322,31 @@ class Linklist extends Component {
       <div>
         <ul className="App-list">
           {this.state.linklist.map((name, index) => {
+            if (name.priority === 1 && name.priority === this.state.linklist.length) {
+              return <li key={index}>
+              <a className="App-onelink" href={name.url}>{name.title}</a>
+            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+            </li>;
+            } else if (name.priority === 1) {
+              return <li key={index}>
+              <a className="App-onelink" href={name.url}>{name.title}</a>
+              <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
+            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+            </li>;
+            } else if (name.priority === this.state.linklist.length) {
+              return <li key={index}>
+              <a className="App-onelink" href={name.url}>{name.title}</a>
+            <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
+            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+            </li>;
+            } else {
             return <li key={index}>
               <a className="App-onelink" href={name.url}>{name.title}</a>
             <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
             <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
             <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
             </li>;
+            }
           })}
         </ul>
       </div>
