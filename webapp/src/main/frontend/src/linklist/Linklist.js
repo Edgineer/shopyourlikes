@@ -151,6 +151,11 @@ class Linklist extends Component {
   // the radio menus regarding the external pages customization
   saveUserSelections() {
     //function should save values to variables
+    var textColor = this.state.textColor;
+    var buttonStyle = this.state.buttonStyle;
+    var selectedTheme = this.state.themeSelected;
+
+    console.log("textColor: " + textColor + "   buttonStyle: " + buttonStyle + "    selectedTheme:" + selectedTheme)
 
     //then make a put call to the backend
   }
