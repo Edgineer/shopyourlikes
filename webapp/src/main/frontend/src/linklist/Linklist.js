@@ -70,20 +70,108 @@ class Linklist extends Component {
       })
   }
 
-  handleDeleteLinkSubmit = event => {
-    event.preventDefault();
+  handleUpdatePriorityUp(linkObject) {
+
+    let priorityID = linkObject.priority;
+    if (priorityID !== 1) {
+
+      let count = 0;
+      for (let i = 0; i < this.state.linklist.length; i++) {
+
+        const userLink = {
+          "username": this.props.location.state.userVal,
+          "title": this.state.linklist[i].title,
+          "url": this.state.linklist[i].url
+        };
+
+        if (this.state.linklist[i].priority === priorityID - 1) {
+          userLink.priority = priorityID;
+        } else if (this.state.linklist[i].priority === priorityID) {
+          userLink.priority = priorityID - 1;
+        } else {
+          userLink.priority = this.state.linklist[i].priority;
+        }
+
+        axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {
+          count++;
+          if (count === this.state.linklist.length) {
+            this.fetchMessage();
+          }
+        });
+      }
     
+    }
+  }
+
+  handleUpdatePriorityDown(linkObject) {
+
+    let priorityID = linkObject.priority;
+    if (priorityID !== this.state.linklist.length) {
+
+      let count = 0;
+      for (let i = 0; i < this.state.linklist.length; i++) {
+
+        const userLink = {
+          "username": this.props.location.state.userVal,
+          "title": this.state.linklist[i].title,
+          "url": this.state.linklist[i].url
+        };
+
+        if (this.state.linklist[i].priority === priorityID) {
+          userLink.priority = priorityID + 1;
+        } else if (this.state.linklist[i].priority === priorityID + 1) {
+          userLink.priority = priorityID;
+        } else {
+          userLink.priority = this.state.linklist[i].priority;
+        }
+
+        axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {
+          count++;
+          if (count === this.state.linklist.length) {
+            this.fetchMessage();
+          }
+        });
+      }
+    
+    }
+  }
+
+  //handleDeleteLinkSubmit = (event, sendID) => {
+  handleDeleteLinkSubmit(sendID) {
+    //event.preventDefault();
+
+  
+    //let sendID = "";
+    /*
     let sendID = "";
     for (let i = 0; i < this.state.linklist.length; i++) {
       if (this.state.linklist[i].title === this.state.deleteTitle) {
         sendID = this.state.linklist[i]._id;
         break;
       }
-    }
+    } */
+
+    for(let i = 0; i < this.state.linklist.length; i++){ 
+      if (this.state.linklist[i]._id === sendID) {
+        this.state.linklist.splice(i, 1); 
+      }
+    }   
 
     axios.delete(MESSAGE_URL +  "/" + sendID)
       .then(res => {
-        this.fetchMessage();
+
+        for (let i = 0; i < this.state.linklist.length; i++) {
+
+          const userLink = {
+            "username": this.props.location.state.userVal,
+            "title": this.state.linklist[i].title,
+            "url": this.state.linklist[i].url,
+            "priority": i + 1
+          };
+
+          axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {});
+
+        }
       })
   }
 
@@ -232,8 +320,13 @@ class Linklist extends Component {
 
       <div>
         <ul className="App-list">
-          {this.state.linklist.map(function(name, index) {
-            return <li key={index}><a className="App-onelink" href={name.url}>{name.title}</a></li>;
+          {this.state.linklist.map((name, index) => {
+            return <li key={index}>
+              <a className="App-onelink" href={name.url}>{name.title}</a>
+            <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
+            <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
+            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+            </li>;
           })}
         </ul>
       </div>
@@ -258,6 +351,7 @@ class Linklist extends Component {
 <br></br>
 <br></br>
 
+          {/*
       <div>
         <form onSubmit={this.handleDeleteLinkSubmit}>
           <label>
@@ -268,6 +362,7 @@ class Linklist extends Component {
           <button type="submit">Delete Post</button>
         </form>
       </div>
+          */}
 
       <br/>
       {/* section for the external page's cosmetic settings */}
