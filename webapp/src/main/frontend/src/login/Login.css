@@ -36,6 +36,9 @@ a {
 }
   
 #Login-button {
+    font-family: "Museo Sans Rounded";
+    font-style: 900;
+    letter-spacing: 25;
     border-radius: 5px;
     background-color: #FF6666;
     color: white;
