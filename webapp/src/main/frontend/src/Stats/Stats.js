@@ -5,19 +5,27 @@ import './Stats.css';
 import ClicksPerDay from './ClicksPerDay.js';
 import ClicksPerLink from './ClicksPerLink.js';
 import ClicksPerRegion from './ClicksPerRegion.js';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import axios from "axios/index";
+import './../App.css';
 
+const MESSAGE_URL = "/links";
 
 class Stats extends Component {
   constructor(props) {
     super(props);
+    //get the passed in username and set it to a variable
+    const {match: {params }} = this.props;
+    this.username = params.user;
+
     this.state = {
       ClicksPerDayData:{},
       ClicksPerLinkData:{},
       ClicksPerRegionData:{},
       username: ""
     }
+    console.log(this.state.username);
     }
-
 
     componentWillMount(){
         this.getClicksPerDayData();
@@ -26,8 +34,7 @@ class Stats extends Component {
     }
 
 
-    //fill this state with data received from ShopYourLikes DB
-    //about clicks and link usage
+    //fill this state with data received from DB about clicks and link usage
     getClicksPerDayData(){
         this.setState({
             ClicksPerDayData:{
@@ -55,7 +62,26 @@ class Stats extends Component {
         });
     }
 
+/*
+    handleGetLinkTitles = event => {
+        event.preventDefault();
 
+        const userLink = {
+          "username": this.props.location.state.userVal,
+          "title": this.state.title,
+          "url": this.state.url,
+          "priority": this.state.linklist.length
+        };
+
+        //alert(JSON.stringify(userLink, null, 4));
+        axios.get(MESSAGE_URL + "/" + this., userLink )
+          .then(res => {
+            this.fetchMessage();
+          })
+      }
+*/
+
+    //priority: bring these Link titles from user's Link DB
     getClicksPerLinkData(){
         this.setState({
             ClicksPerLinkData:{
@@ -114,7 +140,7 @@ class Stats extends Component {
     return(
         <div className="Login-title">
             <div className="App-header">
-                <h3>Click Statistics</h3>
+                <h3>Click Statistics for {this.username} </h3>
             </div>
             <div className="ClicksPerDay-box">
             <ClicksPerLink ClicksPerLinkData={this.state.ClicksPerLinkData} />

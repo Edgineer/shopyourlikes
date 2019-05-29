@@ -141,7 +141,7 @@ class Linklist extends Component {
       <br></br>
       <br></br>
 
-      <Link to="/stats"><button type="button">Statistics Report</button></Link>
+      <Link to={`/stats/${this.props.location.state.userVal}`}><button type="button">Statistics Report</button></Link>
 
       <br></br>
 
