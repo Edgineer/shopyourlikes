@@ -35,13 +35,32 @@ class Login extends Component {
     });
   }
 
+  handleLogin(event) {
+    //Prevent page from reloading
+    event.preventDefault();
+
+    axios.get('/match/' + this.state.username + '/' + this.refs.password.value).then(res => {
+
+      if(res.data === '') //If empty string
+        alert("Username and Password are not correct.");
+      else{
+        //Store the token
+        const serializedState = JSON.stringify(res.data);
+        localStorage.setItem('token', serializedState);
+
+        //Redirect to user's profile
+        this.props.history.push({pathname: '/linktree', state: {userVal: this.state.username}});
+      }
+    })
+    
+  }
+
   handleSubmit(event) {
     //Prevent page from reloading
     event.preventDefault();
 
     //Ask the backend if the username already exists
     axios.get('/checkUsername/' + this.refs.newUsername.value).then(res => {
-
       //res is the response we got from the backend, a JSON containing a boolean
       if(res.data)
         alert("Username already exists!"); 
@@ -62,12 +81,8 @@ class Login extends Component {
           alert("Your account was created! Please Login.");
           this.handleNewAccount();
         });
-    } 
-
+      } 
     })
-
-   
-
   }
 
   render() {
@@ -83,15 +98,18 @@ class Login extends Component {
             <hr width="87%" align="left" color="#a5a5b2"/>
 
 
-            <form>
+            <form onSubmit={this.handleLogin.bind(this)}>
               <input type="text" placeholder="Username" name="username" onChange={this.handleChangeUsername} required="required"></input>
               <br />
-              <input type="password" placeholder="Password" required="required"></input>
+              <input type="password" placeholder="Password" ref="password" required="required"></input>
+
+              {/* Hidden button, so the button below can link to it*/}
+              <input type="submit" id="submit-login"  class="Hidden-button"/>
             </form>
 
             <br/>
-            <Link to={{pathname: '/linktree', state: {userVal: this.state.username}}} ><p id="Login-button">Log In</p></Link>
-            
+            {/*<Link to={{pathname: '/linktree', state: {userVal: this.state.username}}} ><p id="Login-button">Log In</p></Link>*/}
+            <p id="Login-button"><label for="submit-login">Log In</label></p>
             <br/>
           </ul>
 
@@ -123,11 +141,11 @@ class Login extends Component {
               <input type="password" placeholder="Re-enter password" ref="newPasswordRepeat" required="required"></input>
 
               {/* Hidden button, so the button below can link to it*/}
-              <input type="submit" id="submit-form"  class="Hidden-button"/>
+              <input type="submit" id="submit-new-info"  class="Hidden-button"/>
             </form>
 
             <br/>
-            <p id="Login-button"><label for="submit-form">Create New Account</label></p>
+            <p id="Login-button"><label for="submit-new-info">Create New Account</label></p>
             <br/>
           </ul>
 
