@@ -34,8 +34,6 @@ public class UserController {
         repository.save(newUser);
         return new ResponseEntity<User>(newUser, HttpStatus.ACCEPTED);
     }
-  
-    
     
     //Checks if username is in the repository
     @GetMapping("/checkUsername/{username}")
@@ -54,7 +52,7 @@ public class UserController {
 
         int count = repository.countByUsernameIgnoreCase(username);
         if(count > 0){
-            User user = repository.findByUsernameAndHash(username, hashPassword(password));
+            User user = repository.findByUsernameAndHashIgnoreCase(username, hashPassword(password));
             if(user != null){
                 String token = getToken(user.getUsername());
                 return token;
@@ -67,9 +65,7 @@ public class UserController {
     }
 
 
-
-
-    //Checks if username and password match
+    //Checks if Instagram username matches something in our DB
     @GetMapping("/instaMatch/{instaToken}")
     String checkInstaUsername(@PathVariable(value="instaToken") String instaToken){
 
@@ -79,13 +75,13 @@ public class UserController {
         String instagramUrl = "https://api.instagram.com/v1/users/self/?access_token=" + instaToken;
         try{
             String instaResponse = instagramGet(instagramUrl);
-            instaUsername = getUsername(instaResponse);
+            instaUsername = instaUsername(instaResponse);
         } catch (Exception e){
             e.printStackTrace();
         }
 
 
-            User user = repository.findByUsername(instaUsername);
+            User user = repository.findByUsernameIgnoreCase(instaUsername);
             if(user != null){
                 String token = getToken(user.getUsername());
                 return token;
@@ -94,8 +90,10 @@ public class UserController {
                 return "";
     }
     
-    
 
+
+    /* HELPER FUNCTIONS */
+    
     private String hashPassword(String password)
     {
         String hashPlaceholder = password;
@@ -123,15 +121,13 @@ public class UserController {
       return result.toString();
    }
 
-
-   private String getUsername(String JSONString){
+   private String instaUsername(String JSONString){
        JSONObject jObject = new JSONObject(JSONString);
        JSONObject dataObject = jObject.getJSONObject("data");
        String username = dataObject.getString("username");
        return username;
    }
    
-
 }
 
 
