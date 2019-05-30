@@ -319,155 +319,159 @@ class Linklist extends Component {
         <h3>Bio</h3>
       </div>
 
-      <div>
-        <ul className="App-list">
-          {this.state.linklist.map((name, index) => {
-            if (name.priority === 1 && name.priority === this.state.linklist.length) {
-              return <li key={index}>
-              <a className="App-onelink" href={name.url}>{name.title}</a>
-            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-            </li>;
-            } else if (name.priority === 1) {
-              return <li key={index}>
-              <a className="App-onelink" href={name.url}>{name.title}</a>
-              <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
-            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-            </li>;
-            } else if (name.priority === this.state.linklist.length) {
-              return <li key={index}>
-              <a className="App-onelink" href={name.url}>{name.title}</a>
-            <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
-            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-            </li>;
-            } else {
-            return <li key={index}>
-              <a className="App-onelink" href={name.url}>{name.title}</a>
-            <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
-            <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
-            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-            </li>;
-            }
-          })}
-        </ul>
-      </div>
-
-      <div>
-        <form onSubmit={this.handleAddLinkSubmit}>
-          <label>
-          <br></br><br></br>
-            Add New Link:
-            <br></br>
-            Title:
-            <input type="text" name="title" onChange={this.handleChangeTitle} />
-            <br></br>
-            Url:
-            <input type="text" name="url" onChange={this.handleChangeURL} />
-            <br></br>
-          </label>
-          <button type="submit">Add new link</button>
-        </form>
-      </div>
-
-<br></br>
-<br></br>
-
-          {/*
-      <div>
-        <form onSubmit={this.handleDeleteLinkSubmit}>
-          <label>
-            Enter Title of Post to delete:<br></br>
-            <input type="text" name="deleteTitle" onChange={this.handleDeleteChange} />
-          </label>
-          <br></br>
-          <button type="submit">Delete Post</button>
-        </form>
-      </div>
-          */}
-
-      <br/>
-      {/* section for the external page's cosmetic settings */}
-      {/* TODO: make it so both of the radio buttons are automatically
-       selected on whatever the client orginally picked */}
-      <div className="settingsBox">
-
-        <div className="dropdownbtn">
-          <button onClick={this.showMenu} className="themes-button">Themes</button>
-          <br/>
-          {
-            this.state.showMenu
-              ? (
-                <div className="theme-selection-container">
-                  <button id="Default" className="theme-selection" onClick={this.selectNewTheme}>Theme 0</button>
-                  <br/>
-                  <button id="Theme1" className="theme-selection" onClick={this.selectNewTheme}> Theme 1</button>
-                  <br/>
-                  <button id="Theme2" className="theme-selection" onClick={this.selectNewTheme}> Theme 2 </button>
-                  <br/>
-                  <button id="Theme3" className="theme-selection" onClick={this.selectNewTheme}> Theme 3 </button>
-                  <br/>
-                  <button id="Theme4" className="theme-selection" onClick={this.selectNewTheme}> Theme 4 </button>
-                  <br/>
-                  <button id="Theme5" className="theme-selection" onClick={this.selectNewTheme}> Theme 5 </button>
-                </div>
-              )
-              : (
-                null
-              )
-          }
-        </div>
-
-
-        <br/>
-        <br/>
-
-        {/* Options to select black or white text */}
-        <label>White</label>
-        <input type="radio" name="TextColor" input="White"/>
-
-        <label>Black</label>
-        <input type="radio" name="TextColor" input="Black"/>
-
-        <br/>
-        <br/>
-
-        {/* Options to select clear or filled buttons */}
-        <label>Clear</label>
-        <input type="radio" name="ButtonStyle" input="Clear" onClick={this.buttonStyleClear}/>
-
-        <label >Filled</label>
-        <input type="radio" name="ButtonStyle" input="Filled" onClick={this.buttonStyleFilled}/>
-
-        <br/>
-        <br/>
-
-        {/* Form to inputfile */}
+      {/* left side */}
+      <div className="split left">
         <div>
-          <input type="file" onChange={this.fileChangedHandler}/>
-          <br/>
+          <form onSubmit={this.handleAddLinkSubmit}>
+            <label>
+            <br></br><br></br>
+              Add New Link:
+              <br></br>
+              Title:
+              <input type="text" name="title" onChange={this.handleChangeTitle} />
+              <br></br>
+              Url:
+              <input type="text" name="url" onChange={this.handleChangeURL} />
+              <br></br>
+            </label>
+            <button type="submit">Add new link</button>
+          </form>
         </div>
 
-        {/* button to save settings   */}
+  <br></br>
+  <br></br>
+
+            {/*
+        <div>
+          <form onSubmit={this.handleDeleteLinkSubmit}>
+            <label>
+              Enter Title of Post to delete:<br></br>
+              <input type="text" name="deleteTitle" onChange={this.handleDeleteChange} />
+            </label>
+            <br></br>
+            <button type="submit">Delete Post</button>
+          </form>
+        </div>
+            */}
+
         <br/>
-        <button onClick={this.saveSettings}>Save!</button>
+        {/* section for the external page's cosmetic settings */}
+        {/* TODO: make it so both of the radio buttons are automatically
+        selected on whatever the client orginally picked */}
+        <div className="settingsBox">
+
+          <div className="dropdownbtn">
+            <button onClick={this.showMenu} className="themes-button">Themes</button>
+            <br/>
+            {
+              this.state.showMenu
+                ? (
+                  <div className="theme-selection-container">
+                    <button id="Default" className="theme-selection" onClick={this.selectNewTheme}>Theme 0</button>
+                    <br/>
+                    <button id="Theme1" className="theme-selection" onClick={this.selectNewTheme}> Theme 1</button>
+                    <br/>
+                    <button id="Theme2" className="theme-selection" onClick={this.selectNewTheme}> Theme 2 </button>
+                    <br/>
+                    <button id="Theme3" className="theme-selection" onClick={this.selectNewTheme}> Theme 3 </button>
+                    <br/>
+                    <button id="Theme4" className="theme-selection" onClick={this.selectNewTheme}> Theme 4 </button>
+                    <br/>
+                    <button id="Theme5" className="theme-selection" onClick={this.selectNewTheme}> Theme 5 </button>
+                  </div>
+                )
+                : (
+                  null
+                )
+            }
+          </div>
+
+
+          <br/>
+          <br/>
+
+          {/* Options to select black or white text */}
+          <label>White</label>
+          <input type="radio" name="TextColor" input="White"/>
+
+          <label>Black</label>
+          <input type="radio" name="TextColor" input="Black"/>
+
+          <br/>
+          <br/>
+
+          {/* Options to select clear or filled buttons */}
+          <label>Clear</label>
+          <input type="radio" name="ButtonStyle" input="Clear" onClick={this.buttonStyleClear}/>
+
+          <label >Filled</label>
+          <input type="radio" name="ButtonStyle" input="Filled" onClick={this.buttonStyleFilled}/>
+
+          <br/>
+          <br/>
+
+          {/* Form to inputfile */}
+          <div>
+            <input type="file" onChange={this.fileChangedHandler}/>
+            <br/>
+          </div>
+
+          {/* button to save settings   */}
+          <br/>
+          <button onClick={this.saveSettings}>Save!</button>
+          <br/>
+
+        </div>
+
+        <br/>
         <br/>
 
+        <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button">See Link List</button></Link>
+
+        <br></br>
+        <br></br>
+
+        <Link to="/stats"><button type="button">Statistics Report</button></Link>
+
+        <br></br>
+
+        <hr/>
       </div>
 
-      <br/>
-      <br/>
-
-      <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button">See Link List</button></Link>
-
-      <br></br>
-      <br></br>
-
-      <Link to="/stats"><button type="button">Statistics Report</button></Link>
-
-      <br></br>
-
-      <hr/>
-      
-      
+      {/* right side */}
+      <div className="split right">
+        <div>
+          <ul className="App-list">
+            {this.state.linklist.map((name, index) => {
+              if (name.priority === 1 && name.priority === this.state.linklist.length) {
+                return <li key={index}>
+                <a className="App-onelink" href={name.url}>{name.title}</a>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              </li>;
+              } else if (name.priority === 1) {
+                return <li key={index}>
+                <a className="App-onelink" href={name.url}>{name.title}</a>
+                <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              </li>;
+              } else if (name.priority === this.state.linklist.length) {
+                return <li key={index}>
+                <a className="App-onelink" href={name.url}>{name.title}</a>
+              <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              </li>;
+              } else {
+              return <li key={index}>
+                <a className="App-onelink" href={name.url}>{name.title}</a>
+              <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
+              <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              </li>;
+              }
+            })}
+          </ul>
+        </div>
+      </div>
 
       </div>
     );
