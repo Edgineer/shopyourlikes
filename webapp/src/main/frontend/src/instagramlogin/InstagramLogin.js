@@ -14,15 +14,25 @@ class InstagramLogin extends Component {
     }
 
     async getUsername() {
-        try {
-            var response =  await axios.get("https://api.instagram.com/v1/users/self/?access_token=" + this.state.token);
 
-            //Reroute us to the link page, passing the username
-            this.props.history.push({pathname: "/linktree", state: {userVal: response.data.data.username}});
+    axios.get('/instaMatch/' + this.state.token).then(res => {
 
-        } catch (error) {
-            this.setState({error: "Error!"});
-    } 
+      if(res.data === ''){
+        alert("Instagram username does not match any of our usernames!");
+        this.props.history.push({pathname: "/"});
+        }
+      else{
+        //Store the token
+        const token = JSON.stringify(res.data);
+        localStorage.setItem('token', token);
+
+        //This is some bad code to parse the token returned
+        //The token is still a dummy token!
+        const returns = res.data.split("#");
+        this.props.history.push({pathname: "/linktree", state: {userVal: returns[1]}});
+
+        } 
+    }); 
 }
 
     //Ideally we'd get rid of this! but I get an error
