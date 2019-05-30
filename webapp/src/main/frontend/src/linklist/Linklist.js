@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios/index";
 import './../App.css';
 import './Linklist.css';
+import logo from "./../img/logoColor.svg"
 
 
 
@@ -313,46 +314,36 @@ class Linklist extends Component {
   render() {
     return (
       <div className="App">
-
       <div className="App-header">
+        <img src={logo} alt="ShopYourLikes"/>
         <h1>{this.props.location.state.userVal}</h1>
-        <h3>Bio</h3>
       </div>
 
       {/* left side */}
       <div className="split left">
         <div>
+
           <form onSubmit={this.handleAddLinkSubmit}>
             <label>
-            <br></br><br></br>
-              Add New Link:
-              <br></br>
-              Title:
-              <input type="text" name="title" onChange={this.handleChangeTitle} />
-              <br></br>
-              Url:
-              <input type="text" name="url" onChange={this.handleChangeURL} />
-              <br></br>
+              <div className="link-input">
+                <h3>Add a new link</h3>
+                Title:
+                <br/>
+                <input type="text" name="title" placeholder="Link Title..." className="title-form" onChange={this.handleChangeTitle} />
+              </div>
+              <div className="link-input">
+                Url:
+                <br/>
+                <input type="text" name="url" placeholder="Link Address..." className="address-form" onChange={this.handleChangeURL} />
+              </div>
+              <button type="submit" className="link-submit-button">Add new link</button>
+              <br/>
             </label>
-            <button type="submit">Add new link</button>
           </form>
         </div>
 
-  <br></br>
-  <br></br>
-
-            {/*
-        <div>
-          <form onSubmit={this.handleDeleteLinkSubmit}>
-            <label>
-              Enter Title of Post to delete:<br></br>
-              <input type="text" name="deleteTitle" onChange={this.handleDeleteChange} />
-            </label>
-            <br></br>
-            <button type="submit">Delete Post</button>
-          </form>
-        </div>
-            */}
+        <br></br>
+        <br></br>
 
         <br/>
         {/* section for the external page's cosmetic settings */}
@@ -360,87 +351,86 @@ class Linklist extends Component {
         selected on whatever the client orginally picked */}
         <div className="settingsBox">
 
-          <div className="dropdownbtn">
-            <button onClick={this.showMenu} className="themes-button">Themes</button>
+          <h3>Page Settings</h3>
+
+          <div className="theme-options">
+            Themes
             <br/>
-            {
-              this.state.showMenu
-                ? (
-                  <div className="theme-selection-container">
-                    <button id="Default" className="theme-selection" onClick={this.selectNewTheme}>Theme 0</button>
-                    <br/>
-                    <button id="Theme1" className="theme-selection" onClick={this.selectNewTheme}> Theme 1</button>
-                    <br/>
-                    <button id="Theme2" className="theme-selection" onClick={this.selectNewTheme}> Theme 2 </button>
-                    <br/>
-                    <button id="Theme3" className="theme-selection" onClick={this.selectNewTheme}> Theme 3 </button>
-                    <br/>
-                    <button id="Theme4" className="theme-selection" onClick={this.selectNewTheme}> Theme 4 </button>
-                    <br/>
-                    <button id="Theme5" className="theme-selection" onClick={this.selectNewTheme}> Theme 5 </button>
-                  </div>
-                )
-                : (
-                  null
-                )
-            }
+            <select id="themes" name="themes">
+              <option value="Default">Default</option>
+              <option value="Light-Colorful">Light and Colorful</option>
+              <option value="Green">Green</option>
+              <option value="Red">Red</option>
+              <option value="Dark">Dark</option>
+              <option value="Earthy">Earthy</option>
+            </select>
           </div>
 
-
-          <br/>
           <br/>
 
           {/* Options to select black or white text */}
-          <label>White</label>
-          <input type="radio" name="TextColor" input="White"/>
+          <div className="text-color-options">
+            <label for="textColor">Change Page Text Color</label>
+            <br/>
+            <select id="textColor" name="textColor">
+              <option value="Black">Black</option>
+              <option value="White">White</option>
+            </select>
+          </div>
 
-          <label>Black</label>
-          <input type="radio" name="TextColor" input="Black"/>
-
-          <br/>
           <br/>
 
           {/* Options to select clear or filled buttons */}
-          <label>Clear</label>
-          <input type="radio" name="ButtonStyle" input="Clear" onClick={this.buttonStyleClear}/>
+          <div className="button-style-options">
+            <label for="buttonStyle">Change Button Style</label>
 
-          <label >Filled</label>
-          <input type="radio" name="ButtonStyle" input="Filled" onClick={this.buttonStyleFilled}/>
+            <br/>
+            <select id="buttonStyle" name="buttonStyle">
+              <option value="Clear">Clear</option>
+              <option value="Filled">Filled</option>
+            </select>
+          </div>
 
-          <br/>
           <br/>
 
           {/* Form to inputfile */}
-          <div>
-            <input type="file" onChange={this.fileChangedHandler}/>
+          <div className="input-file">
+            <label className="photo-button" for="photo-upload">Add A Background Photo</label>
             <br/>
+            <input id="photo-upload" name="photo-upload" type="file" onChange={this.fileChangedHandler}/>
           </div>
 
           {/* button to save settings   */}
-          <br/>
-          <button onClick={this.saveSettings}>Save!</button>
-          <br/>
+          <br/><br/>
+          <button className="save-button" onClick={this.saveSettings}>Save!</button>
+          <br/><br/>
 
         </div>
 
+        <hr/>
+
+        <div className="link-buttons">
+          <h3>Other Pages</h3>
+          <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button" className="extern-view">See Link Page</button></Link>
+          <br/><br/>
+          <Link to="/stats"><button type="button" className="stats-view">Statistics Report</button></Link>
+        </div>
+        
         <br/>
-        <br/>
-
-        <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button">See Link List</button></Link>
-
-        <br></br>
-        <br></br>
-
-        <Link to="/stats"><button type="button">Statistics Report</button></Link>
-
-        <br></br>
 
         <hr/>
+        <br/>
+
+        <button className="sign-out-button">Sign Out</button>
+
+        <br/><br/>
+
       </div>
 
       {/* right side */}
       <div className="split right">
         <div>
+          <br/>
           <ul className="App-list">
             {this.state.linklist.map((name, index) => {
               if (name.priority === 1 && name.priority === this.state.linklist.length) {
@@ -471,7 +461,10 @@ class Linklist extends Component {
             })}
           </ul>
         </div>
+      <br/><br/><br/>
       </div>
+
+
 
       </div>
     );
