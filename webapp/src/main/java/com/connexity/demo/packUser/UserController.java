@@ -5,6 +5,8 @@ import java.io.*;
 import java.net.*;
 import org.json.JSONObject;
 
+import java.util.LinkedList;
+import java.util.List;
 import com.connexity.demo.packLink.Link;
 import com.connexity.demo.packUser.UserRepository;
 import org.bson.types.ObjectId;
@@ -88,6 +90,27 @@ public class UserController {
             }
             else 
                 return "";
+    }
+
+    @GetMapping("/{username}")
+    User getUsername(@PathVariable(value="username") String username){
+       return repository.findByUsernameIgnoreCase(username);
+    }
+
+    @PutMapping("/settings/{username}")
+    User changeUserSettings(@RequestBody User newSettings, @PathVariable(value="username") String username){
+        System.out.println("hello" + newSettings.getTheme() + " " + repository.findById(username));
+        return repository.findById(username)
+                .map(user -> {
+                    user.setTextcolor(newSettings.getTextcolor());
+                    user.setButtonstyle(newSettings.getButtonstyle());
+                    user.setProfilepic(newSettings.getProfilepic());
+                    user.setTheme(newSettings.getTheme());
+                    return repository.save(user);
+                })
+                .orElseGet(() -> {
+                    return null;
+                });
     }
     
 

@@ -28,7 +28,8 @@ class Tree extends Component {
             deleteTitle: "",
             textColor: true,
             buttonStyle: true,
-            theme: 5,
+            renderPhotoBackground: true,
+            theme: 0,
         };
     }
 
@@ -44,6 +45,21 @@ class Tree extends Component {
           } catch (error) {
               this.setState({error: "Error!"});
           } 
+
+        try {
+            const DBsettings = await axios.get("/" + this.username)
+            console.log("Got the user settings")
+            this.setState({
+                textColor: DBsettings.data.textcolor,
+                buttonStyle: DBsettings.data.buttonstyle,
+                renderPhotoBackground: DBsettings.data.profilepic,
+                theme: DBsettings.data.theme,
+            });
+            console.log("Got the user settings. theme: " + DBsettings.data.theme)
+
+        } catch(error){
+            console.log("Error gettings settings")
+        }
     }
 
     getTheme(index) {
@@ -133,7 +149,6 @@ class Tree extends Component {
         function getColor() {
             if (buttonStyle) {  /*TODO*/ 
                 themeIndex++
-                console.log(themeColors[themeIndex%4 + 1])
                 return themeColors[themeIndex%4 + 1]
             }
             else {
@@ -142,11 +157,19 @@ class Tree extends Component {
         }
 
         //background image
-        var backgroundStyle = {
-            backgroundImage: 'url(' + this.userImage + ')',
-            overflow:'hidden',
-            backgroundColor: themeColors[0]
-        };
+        if (this.state.renderPhotoBackground) {
+            var backgroundStyle = {
+                backgroundImage: 'url(' + this.userImage + ')',
+                overflow:'hidden',
+                backgroundColor: themeColors[0]
+            };
+        } else {
+            var backgroundStyle = {
+                overflow:'hidden',
+                backgroundColor: themeColors[0]
+            };
+        }
+        
 
         return (
             <div style={backgroundStyle} id="Background">

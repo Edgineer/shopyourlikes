@@ -67,7 +67,7 @@ class Linklist extends Component {
     };
 
     //alert(JSON.stringify(userLink, null, 4));
-    axios.post(MESSAGE_URL, userLink )
+    axios.post(MESSAGE_URL, userLink)
       .then(res => {
         this.fetchMessage();
       })
@@ -191,6 +191,24 @@ class Linklist extends Component {
     } catch (error) {
         this.setState({error: "Error!"});
     } 
+
+    //get settings info
+    try {
+      const DBsettings = await axios.get("/" + this.props.location.state.userVal);
+      this.setState({
+        savedButtonStyle: DBsettings.data.buttonStyle,
+        buttonStyle: DBsettings.data.buttonStyle,
+        savedShowPhoto: DBsettings.data.profilepic,
+        showPhoto: DBsettings.data.profilepic,
+        savedTextColor: DBsettings.data.textColor,
+        textColor: DBsettings.data.textColor,
+        savedTheme: DBsettings.data.theme,
+        theme: DBsettings.data.theme,
+      });
+    } catch (error) {
+      console.log("error getting settings")
+      this.setState({error: "Error!"});
+    }
   } 
 
   //this function caches the uploaded file
@@ -259,6 +277,20 @@ class Linklist extends Component {
     });
 
     //then make a put call to the backend
+    const newSettings = {
+      "textcolor": textColor,
+      "buttonstyle": buttonStyle,
+      "profilepic": photoEnabled,
+      "theme": selectedTheme,
+    };
+
+    //alert(JSON.stringify(userLink, null, 4));
+    axios.put("/settings/" + this.props.location.state.userVal, newSettings)
+      .then(res => {
+        this.fetchMessage();
+      }).catch(function(error){
+        console.log("Didn't work")
+      });
   }
 
   //function to save a change in photo option dropdown menu
