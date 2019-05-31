@@ -27,19 +27,21 @@ class Linklist extends Component {
         priority: 0,
         deleteTitle: "",
         selectedFile: null,
-        showMenu: false, //for theme dropdown menu
+        showPhoto: true,  //true: yes, false: no
+        savedShowPhoto: true,
         textColor: true, //true: black, false: white
-        bottonStyle: true, //true: filled, false: clear
+        savedTextColor: true,
+        buttonStyle: true, //true: filled, false: clear
+        savedButtonStyle: true,
         themeSelected: 0, 
+        savedTheme: 0,
     };
 
-    this.showMenu = this.showMenu.bind(this);
-    this.closeMenu = this.closeMenu.bind(this);
-    this.buttonStyleClear = this.buttonStyleClear.bind(this);
-    this.buttonStyleFilled = this.buttonStyleFilled.bind(this);
-    this.textColorBlack = this.textColorBlack.bind(this);
-    this.textColorWhite = this.textColorWhite.bind(this);
-    this.selectNewTheme = this.selectNewTheme.bind(this);
+    this.handleThemeOptions = this.handleThemeOptions.bind(this);
+    this.handlePhotoOptions = this.handlePhotoOptions.bind(this);
+    this.handleButtonStyleOptions = this.handleButtonStyleOptions.bind(this);
+    this.handleTextColorOptions = this.handleTextColorOptions.bind(this);
+    this.saveSettings = this.saveSettings.bind(this);
   }
 
   handleChangeTitle = event => {
@@ -244,70 +246,91 @@ class Linklist extends Component {
     var textColor = this.state.textColor;
     var buttonStyle = this.state.buttonStyle;
     var selectedTheme = this.state.themeSelected;
+    var photoEnabled = this.state.showPhoto;
 
-    console.log("textColor: " + textColor + "   buttonStyle: " + buttonStyle + "    selectedTheme:" + selectedTheme)
+    console.log("textColor: " + textColor + "   buttonStyle: " + buttonStyle + "    selectedTheme:" + selectedTheme + "     photoEnabled::" + photoEnabled)
+
+    //save the settings localy
+    this.setState({
+      savedButtonStyle: buttonStyle,
+      savedShowPhoto: photoEnabled,
+      savedTextColor: textColor,
+      savedTheme: selectedTheme,
+    });
 
     //then make a put call to the backend
   }
 
-  //both showMenu and closeMenu have been taken from a tutorial at the following link
-  //https://blog.campvanilla.com/reactjs-dropdown-menus-b6e06ae3a8fe
-  showMenu(event) {
-    event.preventDefault();
-
-    this.setState({ showMenu: true } , () => {
-      document.addEventListener('click', this.closeMenu);
-    });
-  }
-
-  closeMenu(event) {
-    this.setState({ showMenu: false } , () => {
-      document.removeEventListener('click', this.closeMenu);
-    });
-  }
-
-  // functions to handle radio buttons
-  buttonStyleClear(event) {
-    this.setState({buttonStyle: false});
-  }
-
-  buttonStyleFilled(event) {
-    this.setState({buttonStyle: true});
-  }
-
-  textColorBlack(event) {
-    this.setState({textColor: true});
-  }
-
-  textColorWhite(event) {
-    this.setState({textColor: false});
-  }
-
-  //functions to handle the setting of the themes
-  selectNewTheme(event) {
-    var newThemeValue;
-
-    switch(event.id) {
-      case "Theme1":
-        newThemeValue = 1;
+  //function to save a change in photo option dropdown menu
+  handlePhotoOptions(event) {
+    switch(event.target.value){
+      case "On":
+        this.setState({showPhoto: true});
         break;
-      case "Theme2":
-        newThemeValue = 2;
-        break;
-      case "Theme3":
-        newThemeValue = 3;
-        break;
-      case "Theme4":
-        newThemeValue = 4;
-        break;
-      case "Theme5":
-        newThemeValue = 5;
+      case "Off":
+        this.setState({showPhoto: false});
         break;
       default:
-        newThemeValue = 0;
+        this.setState({showPhoto: this.savedShowPhoto});
+    }
+  }
+
+  //function to save a change in the theme option dropdown menu
+  handleThemeOptions(event) {
+    switch(event.target.value){
+      case "Default":
+        this.setState({themeSelected: 0});
+        break;
+      case "Light-Colorful":
+        this.setState({themeSelected: 1});
+        break;
+      case "Green":        
+        this.setState({themeSelected: 2});
+        break;
+      case "Red":
+        this.setState({themeSelected: 3});
+        break;
+      case "Dark":
+        this.setState({themeSelected: 4});
+        break;
+      case "Earthy":        
+        this.setState({themeSelected: 5});
+        break;
+      default:
+        this.setState({themeSelected: this.state.savedTheme})
+        break;
+    }
+  }
+
+  // function to save a change in the button style dropdown menu
+  handleButtonStyleOptions(event) {
+
+    switch(event.target.value){
+      case "Filled":
+        this.setState({buttonStyle: true});
+        break;
+      case "Clear":
+        this.setState({buttonStyle: false});
+        break;
+      default:
+        this.setState({buttonStyle: this.state.savedButtonStyle});
     }
 
-    this.setState({themeSelected: newThemeValue});
+
+  }
+
+  // function to save a change from the text color dropdown menu
+  handleTextColorOptions(event) {
+    switch(event.target.value){
+      case "Black":
+        this.setState({textColor: true});
+        break;
+      case "White":
+        this.setState({textColor: false});
+        break;
+      default:
+        this.setState({textColor: this.state.savedTextColor});
+    }
   }
 
 
@@ -356,13 +379,14 @@ class Linklist extends Component {
           <div className="theme-options">
             Themes
             <br/>
-            <select id="themes" name="themes">
-              <option value="Default">Default</option>
-              <option value="Light-Colorful">Light and Colorful</option>
-              <option value="Green">Green</option>
-              <option value="Red">Red</option>
-              <option value="Dark">Dark</option>
-              <option value="Earthy">Earthy</option>
+            <select id="themes" name="themes" onChange={this.handleThemeOptions}>
+              <option value="None" onChange={this.handleThemeOptions}></option>
+              <option value="Default" onChange={this.handleThemeOptions}>Default</option>
+              <option value="Light-Colorful" onChange={this.handleThemeOptions}>Light and Colorful</option>
+              <option value="Green" onChange={this.handleThemeOptions}>Green</option>
+              <option value="Red" onChange={this.handleThemeOptions}>Red</option>
+              <option value="Dark" onChange={this.handleThemeOptions}>Dark</option>
+              <option value="Earthy" onChange={this.handleThemeOptions}>Earthy</option>
             </select>
           </div>
 
@@ -372,9 +396,10 @@ class Linklist extends Component {
           <div className="text-color-options">
             <label for="textColor">Change Page Text Color</label>
             <br/>
-            <select id="textColor" name="textColor">
-              <option value="Black">Black</option>
-              <option value="White">White</option>
+            <select id="textColor" name="textColor" onChange={this.handleTextColorOptions}>
+              <option value="None" onChange={this.handleTextColorOptions}></option>
+              <option value="Black" onChange={this.handleTextColorOptions}>Black</option>
+              <option value="White" onChange={this.handleTextColorOptions}>White</option>
             </select>
           </div>
 
@@ -385,9 +410,24 @@ class Linklist extends Component {
             <label for="buttonStyle">Change Button Style</label>
 
             <br/>
-            <select id="buttonStyle" name="buttonStyle">
-              <option value="Clear">Clear</option>
-              <option value="Filled">Filled</option>
+            <select id="buttonStyle" name="buttonStyle" onChange={this.handleButtonStyleOptions}>
+              <option value="None" onChange={this.handleButtonStyleOptions}></option>
+              <option value="Clear" onChange={this.handleButtonStyleOptions}>Clear</option>
+              <option value="Filled" onChange={this.handleButtonStyleOptions}>Filled</option>
+            </select>
+          </div>
+
+          <br/>
+
+          {/* Options to turn on or off the photo background */}
+          <div className="enable-photo-options">
+            <label for="photos-enabled">Enable Background Photo</label>
+
+            <br/>
+            <select id="photos-enabled" name="photos-enabled" onChange={this.handleButtonStyleOptions}>
+              <option value="None" onChange={this.handlePhotoOptions}></option>
+              <option value="On" onChange={this.handlePhotoOptions}>On</option>
+              <option value="Off" onChange={this.handlePhotoOptions}>Off</option>
             </select>
           </div>
 
@@ -407,7 +447,6 @@ class Linklist extends Component {
 
         </div>
 
-        <hr/>
 
         <div className="link-buttons">
           <h3>Other Pages</h3>

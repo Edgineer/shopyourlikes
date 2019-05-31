@@ -92,16 +92,19 @@ class Login extends Component {
         <div className="Login-title">
           <ul className="Login-box">
             <img id="Login-logo" src={logoColor} alt="ShopYourLikes"/>
-            {/* <h2 id="Login-subtext">Login to continue</h2> */}
             <hr width="87%" align="left"/>
-            <a href={INSTA_API}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
-            <hr width="87%" align="left" color="#a5a5b2"/>
 
+            <div display="inline-block">
+              {/* <div className="instagram-text">Login with Instagram</div> */}
+              <a href={INSTA_API}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
+            </div>
+
+            <p clear="both">-or-</p>
 
             <form onSubmit={this.handleLogin.bind(this)}>
-              <input type="text" placeholder="Username" name="username" onChange={this.handleChangeUsername} required="required"></input>
-              <br />
-              <input type="password" placeholder="Password" ref="password" required="required"></input>
+              <input type="text" placeholder="Username" name="username" onChange={this.handleChangeUsername} required="required" className="username-field"></input>
+              <br/><br/>
+              <input type="password" placeholder="Password" ref="password" required="required" className="password-field"></input>
 
               {/* Hidden button, so the button below can link to it*/}
               <input type="submit" id="submit-login"  class="Hidden-button"/>

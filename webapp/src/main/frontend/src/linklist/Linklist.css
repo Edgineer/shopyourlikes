@@ -85,6 +85,18 @@
     padding: 20px; 
 }
 
+.enable-photo-options {
+    position: relative;
+    left: 20px;
+}
+
+#photos-enabled {
+    position: relative;
+    width: 300px;
+    height: 20px;
+    padding: 20px;
+}
+
 .input-file {
     position: relative;
     left: 20px;
