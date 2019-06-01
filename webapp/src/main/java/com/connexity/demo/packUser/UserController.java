@@ -97,10 +97,9 @@ public class UserController {
        return repository.findByUsernameIgnoreCase(username);
     }
 
-    @PutMapping("/settings/{username}")
-    User changeUserSettings(@RequestBody User newSettings, @PathVariable(value="username") String username){
-        System.out.println("hello" + newSettings.getTheme() + " " + repository.findById(username));
-        return repository.findById(username)
+    @PutMapping("/settings/{id}")
+    User changeUserSettings(@RequestBody User newSettings, @PathVariable(value="id") String id){
+        return repository.findById(id)
                 .map(user -> {
                     user.setTextcolor(newSettings.getTextcolor());
                     user.setButtonstyle(newSettings.getButtonstyle());

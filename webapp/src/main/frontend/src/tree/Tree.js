@@ -48,14 +48,12 @@ class Tree extends Component {
 
         try {
             const DBsettings = await axios.get("/" + this.username)
-            console.log("Got the user settings")
             this.setState({
                 textColor: DBsettings.data.textcolor,
                 buttonStyle: DBsettings.data.buttonstyle,
                 renderPhotoBackground: DBsettings.data.profilepic,
                 theme: DBsettings.data.theme,
             });
-            console.log("Got the user settings. theme: " + DBsettings.data.theme)
 
         } catch(error){
             console.log("Error gettings settings")

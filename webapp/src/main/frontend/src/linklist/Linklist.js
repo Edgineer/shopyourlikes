@@ -26,6 +26,7 @@ class Linklist extends Component {
         url: "",
         priority: 0,
         deleteTitle: "",
+        userInfo: null, //user object returned from backend
         selectedFile: null,
         showPhoto: true,  //true: yes, false: no
         savedShowPhoto: true,
@@ -66,11 +67,12 @@ class Linklist extends Component {
       "priority": this.state.linklist.length + 1
     };
 
-    //alert(JSON.stringify(userLink, null, 4));
-    axios.post(MESSAGE_URL, userLink)
+    axios.post(MESSAGE_URL + "/", userLink)
       .then(res => {
         this.fetchMessage();
-      })
+      }).catch(function(error) {
+        // console.log("failed to add a new link")
+      });
   }
 
   handleUpdatePriorityUp(linkObject) {
@@ -196,14 +198,15 @@ class Linklist extends Component {
     try {
       const DBsettings = await axios.get("/" + this.props.location.state.userVal);
       this.setState({
-        savedButtonStyle: DBsettings.data.buttonStyle,
-        buttonStyle: DBsettings.data.buttonStyle,
+        userInfo: DBsettings.data,
+        savedButtonStyle: DBsettings.data.buttonstyle,
+        buttonStyle: DBsettings.data.buttonstyle,
         savedShowPhoto: DBsettings.data.profilepic,
         showPhoto: DBsettings.data.profilepic,
-        savedTextColor: DBsettings.data.textColor,
-        textColor: DBsettings.data.textColor,
+        savedTextColor: DBsettings.data.textcolor,
+        textColor: DBsettings.data.textcolor,
         savedTheme: DBsettings.data.theme,
-        theme: DBsettings.data.theme,
+        themeSelected: DBsettings.data.theme,
       });
     } catch (error) {
       console.log("error getting settings")
@@ -214,7 +217,7 @@ class Linklist extends Component {
   //this function caches the uploaded file
   fileChangedHandler = (event) => {
     this.setState({selectedFile: event.target.files[0]})
-    console.log(event)
+    // console.log(event)
   }
 
   //this function handles the case in which the user confirms their picture selection
@@ -230,7 +233,7 @@ class Linklist extends Component {
     //if there isn't a file uploaded then return without doing anything
     if (this.state.selectedFile == null)
     {
-      console.log("Tried to upload but nothing was selected!!\n")
+      // console.log("Tried to upload but nothing was selected!!\n")
       return
     }
 
@@ -251,7 +254,7 @@ class Linklist extends Component {
     //make the axios request
     axios.post(url, formData, config)
         .then(function(res) {
-          console.log(res)
+          // console.log(res)
         }).catch(function(err){
           console.error(err)
         });
@@ -266,7 +269,8 @@ class Linklist extends Component {
     var selectedTheme = this.state.themeSelected;
     var photoEnabled = this.state.showPhoto;
 
-    console.log("textColor: " + textColor + "   buttonStyle: " + buttonStyle + "    selectedTheme:" + selectedTheme + "     photoEnabled::" + photoEnabled)
+    
+
 
     //save the settings localy
     this.setState({
@@ -276,6 +280,7 @@ class Linklist extends Component {
       savedTheme: selectedTheme,
     });
 
+
     //then make a put call to the backend
     const newSettings = {
       "textcolor": textColor,
@@ -284,12 +289,13 @@ class Linklist extends Component {
       "theme": selectedTheme,
     };
 
+
     //alert(JSON.stringify(userLink, null, 4));
-    axios.put("/settings/" + this.props.location.state.userVal, newSettings)
+    axios.put("/settings/" + this.state.userInfo._id, newSettings)
       .then(res => {
         this.fetchMessage();
       }).catch(function(error){
-        console.log("Didn't work")
+        console.log("Updating the settings didn't go through")
       });
   }
 
@@ -303,7 +309,7 @@ class Linklist extends Component {
         this.setState({showPhoto: false});
         break;
       default:
-        this.setState({showPhoto: this.savedShowPhoto});
+        this.setState({showPhoto: this.state.savedShowPhoto});
     }
   }
 
@@ -328,8 +334,9 @@ class Linklist extends Component {
       case "Earthy":        
         this.setState({themeSelected: 5});
         break;
+      case "None":
       default:
-        this.setState({themeSelected: this.state.savedTheme})
+        this.setState({themeSelected: this.state.savedTheme});
         break;
     }
   }
@@ -456,7 +463,7 @@ class Linklist extends Component {
             <label for="photos-enabled">Enable Background Photo</label>
 
             <br/>
-            <select id="photos-enabled" name="photos-enabled" onChange={this.handleButtonStyleOptions}>
+            <select id="photos-enabled" name="photos-enabled" onChange={this.handlePhotoOptions}>
               <option value="None" onChange={this.handlePhotoOptions}></option>
               <option value="On" onChange={this.handlePhotoOptions}>On</option>
               <option value="Off" onChange={this.handlePhotoOptions}>Off</option>
