@@ -372,6 +372,12 @@ class Linklist extends Component {
     }
   }
 
+  //Handles when the user clicks the sign-out button
+  handleSignout(event){
+    localStorage.removeItem("token");
+    this.props.history.push({pathname: "/"});
+  }
+
 
   render() {
     return (
@@ -499,7 +505,7 @@ class Linklist extends Component {
         <hr/>
         <br/>
 
-        <button className="sign-out-button">Sign Out</button>
+        <button className="sign-out-button" onClick={this.handleSignout.bind(this)}>Sign Out</button>
 
         <br/><br/>
 

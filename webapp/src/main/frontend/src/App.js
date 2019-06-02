@@ -4,7 +4,8 @@ import './App.css';
 import Linklist from "./linklist/Linklist"
 import Login from "./login/Login.js"
 import Stats from "./Stats/Stats.js"
-import InstagramLogin from "./instagramlogin/InstagramLogin.js"
+import InstagramLogin from "./instagram/InstagramLogin.js"
+import InstagramSignup from "./instagram/InstagramSignup.js"
 import Tree from "./tree/Tree.js"
 import logoColor from "./img/logoColor.svg"
 
@@ -33,7 +34,8 @@ class App extends Component {
         <Route exact path="/" component={Login}/>
         <Route exact path="/linktree" component={Linklist}/>
         <Route exact path="/login" component={Login}/>
-        <Route exact path="/insta_auth" component={InstagramLogin}/>
+        <Route exact path="/insta_login" component={InstagramLogin}/>
+        <Route exact path="/insta_signup" component={InstagramSignup}/>
         <Route exact path="/tree/:user" component={Tree}/>
         <Route exact path="/stats" component={Stats}/>
       </div>

@@ -10,9 +10,13 @@ import './Login.css';
 import axios from "axios/index";
 
 
-const INSTA_API = "https://api.instagram.com/oauth/authorize/?" +
+const INSTA_LOGIN = "https://api.instagram.com/oauth/authorize/?" +
                 "client_id=0730e096783745e7a0da8eed3152b8f6" + "&" + 
-                "redirect_uri=http://localhost:3000/insta_auth" + "&" +
+                "redirect_uri=http://localhost:3000/insta_login" + "&" +
+                "response_type=token";
+const INSTA_SIGNUP = "https://api.instagram.com/oauth/authorize/?" +
+                "client_id=0730e096783745e7a0da8eed3152b8f6" + "&" + 
+                "redirect_uri=http://localhost:3000/insta_signup" + "&" +
                 "response_type=token";
 
 
@@ -24,6 +28,7 @@ class Login extends Component {
       username: "",
     }
   }
+
 
   handleChangeUsername = event => {
     this.setState({ username: event.target.value });
@@ -55,37 +60,10 @@ class Login extends Component {
     
   }
 
-  handleSubmit(event) {
-    //Prevent page from reloading
-    event.preventDefault();
 
-    //Ask the backend if the username already exists
-    axios.get('/checkUsername/' + this.refs.newUsername.value).then(res => {
-      //res is the response we got from the backend, a JSON containing a boolean
-      if(res.data)
-        alert("Username already exists!"); 
-      else if( this.refs.newPassword.value != this.refs.newPasswordRepeat.value)
-        alert("Passwords don't match!");
-      //The data is validated, so we post the new account info
-      else {
-        //Pack the new account info
-        const userInfo = {
-        "firstname": this.refs.newFirst.value, 
-        "lastname": this.refs.newLast.value, 
-        "username": this.refs.newUsername.value, 
-        "email": this.refs.newEmail.value, 
-        "hash": this.refs.newPassword.value};
-
-        //Make the post request
-        axios.post('/', userInfo).then(res => {
-          alert("Your account was created! Please Login.");
-          this.handleNewAccount();
-        });
-      } 
-    })
-  }
 
   render() {
+
     if (this.state.signIn === true)
     {
       return (
@@ -96,7 +74,7 @@ class Login extends Component {
 
             <div display="inline-block">
               {/* <div className="instagram-text">Login with Instagram</div> */}
-              <a href={INSTA_API}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
+              <a href={INSTA_LOGIN}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
             </div>
 
             <p clear="both">-or-</p>
@@ -125,31 +103,14 @@ class Login extends Component {
       return (
         <div className="Login-title">
           <h1>ShopYourLikes</h1> 
-          <h2 id="Login-subtext">Enter your user information</h2>
+          <h2 id="Login-subtext">Instagram Login</h2>
           <ul className="Login-box">
-            <p>Login with instagram</p>
-            <hr width="87%" align="left"/>
-
-            <form onSubmit={this.handleSubmit.bind(this)}>
-              <input type="text" placeholder="First name" ref="newFirst" required="required"></input>
-              <br />
-              <input type="text" placeholder="Last name" ref="newLast" required="required"></input>
-              <br />
-              <input type="text" placeholder="Email" ref="newEmail" required="required"></input>
-              <br />
-              <input type="text" placeholder="Username" ref="newUsername" required="required"></input>
-              <br />
-              <input type="password" placeholder="Password" ref="newPassword" required="required"></input>
-              <br />
-              <input type="password" placeholder="Re-enter password" ref="newPasswordRepeat" required="required"></input>
-
-              {/* Hidden button, so the button below can link to it*/}
-              <input type="submit" id="submit-new-info"  class="Hidden-button"/>
-            </form>
-
+            Before creating your account, please log in to Instagram:
             <br/>
-            <p id="Login-button"><label for="submit-new-info">Create New Account</label></p>
-            <br/>
+            <div display="inline-block">
+              {/* <div className="instagram-text">Login with Instagram</div> */}
+              <a href={INSTA_SIGNUP}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
+            </div>
           </ul>
 
           <br/>

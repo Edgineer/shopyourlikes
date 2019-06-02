@@ -26,18 +26,41 @@ public class UserController {
         return new ResponseEntity<>(repository.findAll(),HttpStatus.OK);
     }
 
-    @PostMapping("/")
-    ResponseEntity<?> createUser(@RequestBody User newUser){
-        newUser.set_id(ObjectId.get());
+    @PostMapping("/{instaToken}")
+    ResponseEntity<?> createUser(@RequestBody User newUser, @PathVariable(value="instaToken") String instaToken){
         
-        //Hash the password
-        newUser.setHash(hashPassword(newUser.getHash()));
+        //Make sure the username doesn't already exist
+        int count = repository.countByUsernameIgnoreCase(newUser.getUsername());
+        if(count > 0)
+            return null;
 
-        repository.save(newUser);
-        return new ResponseEntity<User>(newUser, HttpStatus.ACCEPTED);
+        //Grab the Instagram username using the token
+        String instaUsername = "";
+        String instagramUrl = "https://api.instagram.com/v1/users/self/?access_token=" + instaToken;
+        try{
+            String instaResponse = instagramGet(instagramUrl);
+            instaUsername = instaUsername(instaResponse);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        //Check that username matches with Instagram username
+        if(instaUsername.equals(newUser.getUsername()) ){
+
+            newUser.set_id(ObjectId.get());
+        
+            //Hash the password
+            newUser.setHash(hashPassword(newUser.getHash()));
+
+            repository.save(newUser);
+            return new ResponseEntity<User>(newUser, HttpStatus.ACCEPTED);
+        }
+        else{
+            return null;
+        }
     }
     
-    //Checks if username is in the repository
+    //Checks if username is already in the repository
     @GetMapping("/checkUsername/{username}")
     Boolean checkUsername(@PathVariable(value="username") String username){
 
