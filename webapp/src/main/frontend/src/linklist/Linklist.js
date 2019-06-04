@@ -72,6 +72,7 @@ class Linklist extends Component {
 
     axios.post(MESSAGE_URL + "/", userLink)
       .then(res => {
+        this.setState({title : "", url: ""});
         this.fetchMessage();
       }).catch(function(error) {
         // console.log("failed to add a new link")
@@ -458,12 +459,12 @@ class Linklist extends Component {
                 <h3>Add a new link</h3>
                 Title:
                 <br/>
-                <input type="text" name="title" placeholder="Link Title..." className="title-form" onChange={this.handleChangeTitle} />
+                <input type="text" name="title" placeholder="Link Title..." value={this.state.title} className="title-form" onChange={this.handleChangeTitle} />
               </div>
               <div className="link-input">
                 Url:
                 <br/>
-                <input type="text" name="url" placeholder="Link Address..." className="address-form" onChange={this.handleChangeURL} />
+                <input type="text" name="url" placeholder="Link Address..." value={this.state.url} className="address-form" onChange={this.handleChangeURL} />
               </div>
               <button type="submit" className="link-submit-button">Add new link</button>
               <br/>
