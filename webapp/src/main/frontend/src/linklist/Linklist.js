@@ -4,6 +4,9 @@ import axios from "axios/index";
 import './../App.css';
 import './Linklist.css';
 import logo from "./../img/logoColor.svg"
+import logoTrash from "./../img/icons_trash.png";
+import logoUp from "./../img/icons_up.png";
+import logoDown from "./../img/icons_down.png";
 
 
 
@@ -105,6 +108,35 @@ class Linklist extends Component {
         });
       }
     
+    } else {
+
+      let count = 0;
+      for (let i = 1; i < this.state.linklist.length; i++) {
+
+        const userLink = {
+          "username": this.props.location.state.userVal,
+          "title": this.state.linklist[i].title,
+          "url": this.state.linklist[i].url,
+          "priority": this.state.linklist[i].priority - 1
+        };
+
+        axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {
+          count++;
+          if (count === this.state.linklist.length - 1) {
+
+            const userUpLink = {
+              "username": this.props.location.state.userVal,
+              "title": this.state.linklist[0].title,
+              "url": this.state.linklist[0].url,
+              "priority": this.state.linklist.length
+            };
+      
+            axios.put(MESSAGE_URL + "/" + this.state.linklist[0]._id, userUpLink).then( res => {
+              this.fetchMessage();
+            });
+          }
+        });
+      }
     }
   }
 
@@ -138,6 +170,35 @@ class Linklist extends Component {
         });
       }
     
+    } else {
+
+      const userDownLink = {
+        "username": this.props.location.state.userVal,
+        "title": this.state.linklist[this.state.linklist.length - 1].title,
+        "url": this.state.linklist[this.state.linklist.length - 1].url,
+        "priority": 1
+      };
+
+      axios.put(MESSAGE_URL + "/" + this.state.linklist[this.state.linklist.length - 1]._id, userDownLink).then( res => {
+        let count = 1;
+        for (let i = 0; i < this.state.linklist.length - 1; i++) {
+
+          const userLink = {
+            "username": this.props.location.state.userVal,
+            "title": this.state.linklist[i].title,
+            "url": this.state.linklist[i].url,
+            "priority": this.state.linklist[i].priority + 1
+          };
+
+          axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {
+            count++;
+            if (count === this.state.linklist.length) {
+              this.fetchMessage();
+            }
+          });
+        }
+      });
+
     }
   }
 
@@ -520,26 +581,14 @@ class Linklist extends Component {
               if (name.priority === 1 && name.priority === this.state.linklist.length) {
                 return <li key={index}>
                 <a className="App-onelink" href={name.url}>{name.title}</a>
-              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-              </li>;
-              } else if (name.priority === 1) {
-                return <li key={index}>
-                <a className="App-onelink" href={name.url}>{name.title}</a>
-                <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
-              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-              </li>;
-              } else if (name.priority === this.state.linklist.length) {
-                return <li key={index}>
-                <a className="App-onelink" href={name.url}>{name.title}</a>
-              <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
-              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}><img src={logoTrash} alt="LogoTrash" /></button>
               </li>;
               } else {
               return <li key={index}>
                 <a className="App-onelink" href={name.url}>{name.title}</a>
-              <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
-              <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
-              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              <button onClick={() => {this.handleUpdatePriorityUp(name)}}><img src={logoUp} alt="LogoUp" /></button>
+              <button onClick={() => {this.handleUpdatePriorityDown(name)}}><img src={logoDown} alt="LogoDown" /></button>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}><img src={logoTrash} alt="LogoTrash" /></button>
               </li>;
               }
             })}
