@@ -8,6 +8,7 @@ import ClicksPerRegion from './ClicksPerRegion.js';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios/index";
 import './../App.css';
+import logoColor from ".././img/logoColor.svg"
 
 const MESSAGE_URL = "/links";
 
@@ -17,24 +18,73 @@ class Stats extends Component {
     //get the passed in username and set it to a variable
     const {match: {params }} = this.props;
     this.username = params.user;
-
     this.state = {
-      firstTitle: "none",
-      ClicksPerDayData:{},
-      ClicksPerLinkData:{},
-      ClicksPerRegionData:{},
       username: "",
       listOfLinks: [],
-      linkTitles: []
+      linkTitles: [],
+      loading: true,
+      ClicksPerDayData:{},
+      ClicksPerLinkData:{},
+      ClicksPerRegionData:{}
     }
-    this.getTitles();
   }
 
-    componentWillMount(){
+
+  componentDidMount(){
+      fetch("/links/" + this.username)
+        .then(res => res.json())
+        .then(
+            (result) => {
+                var arr = [];
+                var titlesArr = [];
+                for(var i = 0; i < result.length; i++)
+                    arr.push(result[i]);
+                titlesArr = arr.map(link => link.title);
+                console.log(arr)
+                console.log(titlesArr)
+                this.setState({
+                listOfLinks: arr,
+                linkTitles: titlesArr,
+                ClicksPerLinkData: {
+                   labels: titlesArr,
+                   datasets:[{
+                        data:[793, 1847,200],
+                        backgroundColor:[
+                             'rgba(54, 162, 235, 0.6)',
+                             'rgba(255, 206, 86, 0.6)',
+                             'rgba(115, 183, 252, 0.6)',
+                             'rgba(75, 192, 192, 0.6)',
+                             'rgba(153 , 102, 255, 0.6)',
+                             'rgba(255, 99, 132, 0.6)',
+                             'rgba(255, 99, 132, 0.6)',
+                             'rgba(54, 162, 235, 0.6)',
+                             'rgba(115, 183, 252, 0.6)',
+                             'rgba(255, 206, 86, 0.6)',
+                             'rgba(75, 192, 192, 0.6)',
+                             'rgba(153 , 102, 255, 0.6)',
+                             'rgba(255, 99, 132, 0.6)',
+                             'rgba(255, 99, 132, 0.6)']
+                       }]
+                },
+                loading: false
+                });
+            },
+            (error) => {
+                console.log("error in DidMount")
+                this.setState({
+                error
+                });
+            }
+        )
+      this.getData();
+  }
+
+
+    getData(){
         this.getClicksPerDayData();
-        this.getClicksPerLinkData();
         this.getClicksPerRegionData();
     }
+
 
 
     //fill this state with data received from DB about clicks and link usage
@@ -65,54 +115,6 @@ class Stats extends Component {
         });
     }
 
-//    static getDerivedStateFromProps(props,state) {
-//        this.getTitles();
-//    }
-
-    async getTitles() {
-        await this.getUserInfo();
-        this.state.linkTitles = this.state.listOfLinks.map(link => link.title);
-        console.log(this.state.linkTitles[0]);
-    }
-
-    async getUserInfo() {
-        try {
-            //response.data contains an array of JavaScript objects
-            const response = await axios.get(MESSAGE_URL + "/" + this.username)
-            this.setState({listOfLinks: response.data});
-            console.log(this.state.listOfLinks);
-          } catch (error) {
-              console.log("in catch");
-              console.log(error);
-              this.setState({error: "Error!"});
-          }
-    }
-
-
-    //priority: bring these Link titles from user's Link DB
-    async getClicksPerLinkData(){
-        await this.getUserInfo();
-        console.log(this.state.listOfLinks.map(link => link.title));
-        this.setState({
-            ClicksPerLinkData:{
-                       //labels: this.state.listOfLinks.map(link => link.title),
-                       labels: ["this", "that"],
-                       datasets:[
-                           {label:'Clicks',
-                            data:[793, 1847],
-                            backgroundColor:[
-                            'rgba(255, 99, 132, 0.6)',
-//                            'rgba(54, 162, 235, 0.6)',
-//                            'rgba(255, 206, 86, 0.6)',
-//                            'rgba(75, 192, 192, 0.6)',
-//                            'rgba(153 , 102, 255, 0.6)',
-//                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(255, 99, 132, 0.6)']
-                           }
-                       ]
-                   }
-        });
-    }
 
 
     getClicksPerRegionData(){
@@ -148,29 +150,38 @@ class Stats extends Component {
 
 
    render() {
-   console.log(this.state.linkTitles[0]);
-    return(
-        <div className="Login-title">
-            <div className="App-header">
-                <h3>Click Statistics for {this.username} </h3>
-                <h3>First Title: {this.state.linkTitles[0]} </h3>
-            </div>
-
-            <div className="ClicksPerDay-box">
-            <ClicksPerLink ClicksPerLinkData={this.state.ClicksPerLinkData} />
-            </div>
-            <br></br>
-            <div className="ClicksPerDay-box">
-            <ClicksPerDay ClicksPerDayData={this.state.ClicksPerDayData} />
-            </div>
-            <br></br>
-            <div className="ClicksPerDay-box">
-            <ClicksPerRegion ClicksPerRegionData={this.state.ClicksPerRegionData}/>
-            </div>
-
-        </div>
-        );
+    console.log(this.state.loading)
+    let data;
+    if (this.state.loading) {
+        data = <img data-src={ require('./../logo.svg') } />
     }
+    else {
+        data =
+            <div className="Login-title">
+                <div className="App-header">
+                    <h3>Click Statistics for {this.username} </h3>
+                    <h3>First Title: {this.state.linkTitles[0]} </h3>
+                </div>
+                <div className="ClicksPerDay-box">
+                <ClicksPerLink ClicksPerLinkData={this.state.ClicksPerLinkData} />
+                </div>
+                <br></br>
+                <div className="ClicksPerDay-box">
+                <ClicksPerDay ClicksPerDayData={this.state.ClicksPerDayData} />
+                </div>
+                <br></br>
+                <div className="ClicksPerDay-box">
+                <ClicksPerRegion ClicksPerRegionData={this.state.ClicksPerRegionData}/>
+                </div>
+            </div>
+    }
+    return(
+        <div>
+            {data}
+        </div>
+    );
+    }
+
   }
 
 export default Stats;
