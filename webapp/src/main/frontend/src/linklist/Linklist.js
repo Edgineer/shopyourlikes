@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios/index";
 import './../App.css';
 import './Linklist.css';
+import logo from "./../img/logoColor.svg"
 
 
 
@@ -25,20 +26,23 @@ class Linklist extends Component {
         url: "",
         priority: 0,
         deleteTitle: "",
+        userInfo: null, //user object returned from backend
         selectedFile: null,
-        showMenu: false, //for theme dropdown menu
+        showPhoto: true,  //true: yes, false: no
+        savedShowPhoto: true,
         textColor: true, //true: black, false: white
-        bottonStyle: true, //true: filled, false: clear
+        savedTextColor: true,
+        buttonStyle: true, //true: filled, false: clear
+        savedButtonStyle: true,
         themeSelected: 0, 
+        savedTheme: 0,
     };
 
-    this.showMenu = this.showMenu.bind(this);
-    this.closeMenu = this.closeMenu.bind(this);
-    this.buttonStyleClear = this.buttonStyleClear.bind(this);
-    this.buttonStyleFilled = this.buttonStyleFilled.bind(this);
-    this.textColorBlack = this.textColorBlack.bind(this);
-    this.textColorWhite = this.textColorWhite.bind(this);
-    this.selectNewTheme = this.selectNewTheme.bind(this);
+    this.handleThemeOptions = this.handleThemeOptions.bind(this);
+    this.handlePhotoOptions = this.handlePhotoOptions.bind(this);
+    this.handleButtonStyleOptions = this.handleButtonStyleOptions.bind(this);
+    this.handleTextColorOptions = this.handleTextColorOptions.bind(this);
+    this.saveSettings = this.saveSettings.bind(this);
   }
 
   handleChangeTitle = event => {
@@ -63,11 +67,12 @@ class Linklist extends Component {
       "priority": this.state.linklist.length + 1
     };
 
-    //alert(JSON.stringify(userLink, null, 4));
-    axios.post(MESSAGE_URL, userLink )
+    axios.post(MESSAGE_URL + "/", userLink)
       .then(res => {
         this.fetchMessage();
-      })
+      }).catch(function(error) {
+        // console.log("failed to add a new link")
+      });
   }
 
   handleUpdatePriorityUp(linkObject) {
@@ -188,12 +193,31 @@ class Linklist extends Component {
     } catch (error) {
         this.setState({error: "Error!"});
     } 
+
+    //get settings info
+    try {
+      const DBsettings = await axios.get("/" + this.props.location.state.userVal);
+      this.setState({
+        userInfo: DBsettings.data,
+        savedButtonStyle: DBsettings.data.buttonstyle,
+        buttonStyle: DBsettings.data.buttonstyle,
+        savedShowPhoto: DBsettings.data.profilepic,
+        showPhoto: DBsettings.data.profilepic,
+        savedTextColor: DBsettings.data.textcolor,
+        textColor: DBsettings.data.textcolor,
+        savedTheme: DBsettings.data.theme,
+        themeSelected: DBsettings.data.theme,
+      });
+    } catch (error) {
+      console.log("error getting settings")
+      this.setState({error: "Error!"});
+    }
   } 
 
   //this function caches the uploaded file
   fileChangedHandler = (event) => {
     this.setState({selectedFile: event.target.files[0]})
-    console.log(event)
+    // console.log(event)
   }
 
   //this function handles the case in which the user confirms their picture selection
@@ -209,7 +233,7 @@ class Linklist extends Component {
     //if there isn't a file uploaded then return without doing anything
     if (this.state.selectedFile == null)
     {
-      console.log("Tried to upload but nothing was selected!!\n")
+      // console.log("Tried to upload but nothing was selected!!\n")
       return
     }
 
@@ -230,7 +254,7 @@ class Linklist extends Component {
     //make the axios request
     axios.post(url, formData, config)
         .then(function(res) {
-          console.log(res)
+          // console.log(res)
         }).catch(function(err){
           console.error(err)
         });
@@ -243,231 +267,290 @@ class Linklist extends Component {
     var textColor = this.state.textColor;
     var buttonStyle = this.state.buttonStyle;
     var selectedTheme = this.state.themeSelected;
+    var photoEnabled = this.state.showPhoto;
 
-    console.log("textColor: " + textColor + "   buttonStyle: " + buttonStyle + "    selectedTheme:" + selectedTheme)
+    
+
+
+    //save the settings localy
+    this.setState({
+      savedButtonStyle: buttonStyle,
+      savedShowPhoto: photoEnabled,
+      savedTextColor: textColor,
+      savedTheme: selectedTheme,
+    });
+
 
     //then make a put call to the backend
+    const newSettings = {
+      "textcolor": textColor,
+      "buttonstyle": buttonStyle,
+      "profilepic": photoEnabled,
+      "theme": selectedTheme,
+    };
+
+
+    //alert(JSON.stringify(userLink, null, 4));
+    axios.put("/settings/" + this.state.userInfo._id, newSettings)
+      .then(res => {
+        this.fetchMessage();
+      }).catch(function(error){
+        console.log("Updating the settings didn't go through")
+      });
   }
 
-  //both showMenu and closeMenu have been taken from a tutorial at the following link
-  //https://blog.campvanilla.com/reactjs-dropdown-menus-b6e06ae3a8fe
-  showMenu(event) {
-    event.preventDefault();
-
-    this.setState({ showMenu: true } , () => {
-      document.addEventListener('click', this.closeMenu);
-    });
-  }
-
-  closeMenu(event) {
-    this.setState({ showMenu: false } , () => {
-      document.removeEventListener('click', this.closeMenu);
-    });
-  }
-
-  // functions to handle radio buttons
-  buttonStyleClear(event) {
-    this.setState({buttonStyle: false});
-  }
-
-  buttonStyleFilled(event) {
-    this.setState({buttonStyle: true});
-  }
-
-  textColorBlack(event) {
-    this.setState({textColor: true});
-  }
-
-  textColorWhite(event) {
-    this.setState({textColor: false});
-  }
-
-  //functions to handle the setting of the themes
-  selectNewTheme(event) {
-    var newThemeValue;
-
-    switch(event.id) {
-      case "Theme1":
-        newThemeValue = 1;
+  //function to save a change in photo option dropdown menu
+  handlePhotoOptions(event) {
+    switch(event.target.value){
+      case "On":
+        this.setState({showPhoto: true});
         break;
-      case "Theme2":
-        newThemeValue = 2;
-        break;
-      case "Theme3":
-        newThemeValue = 3;
-        break;
-      case "Theme4":
-        newThemeValue = 4;
-        break;
-      case "Theme5":
-        newThemeValue = 5;
+      case "Off":
+        this.setState({showPhoto: false});
         break;
       default:
-        newThemeValue = 0;
+        this.setState({showPhoto: this.state.savedShowPhoto});
+    }
+  }
+
+  //function to save a change in the theme option dropdown menu
+  handleThemeOptions(event) {
+    switch(event.target.value){
+      case "Default":
+        this.setState({themeSelected: 0});
+        break;
+      case "Light-Colorful":
+        this.setState({themeSelected: 1});
+        break;
+      case "Green":        
+        this.setState({themeSelected: 2});
+        break;
+      case "Red":
+        this.setState({themeSelected: 3});
+        break;
+      case "Dark":
+        this.setState({themeSelected: 4});
+        break;
+      case "Earthy":        
+        this.setState({themeSelected: 5});
+        break;
+      case "None":
+      default:
+        this.setState({themeSelected: this.state.savedTheme});
+        break;
+    }
+  }
+
+  // function to save a change in the button style dropdown menu
+  handleButtonStyleOptions(event) {
+
+    switch(event.target.value){
+      case "Filled":
+        this.setState({buttonStyle: true});
+        break;
+      case "Clear":
+        this.setState({buttonStyle: false});
+        break;
+      default:
+        this.setState({buttonStyle: this.state.savedButtonStyle});
     }
 
-    this.setState({themeSelected: newThemeValue});
+
+  }
+
+  // function to save a change from the text color dropdown menu
+  handleTextColorOptions(event) {
+    switch(event.target.value){
+      case "Black":
+        this.setState({textColor: true});
+        break;
+      case "White":
+        this.setState({textColor: false});
+        break;
+      default:
+        this.setState({textColor: this.state.savedTextColor});
+    }
+  }
+
+  //Handles when the user clicks the sign-out button
+  handleSignout(event){
+    localStorage.removeItem("token");
+    this.props.history.push({pathname: "/"});
   }
 
 
   render() {
     return (
       <div className="App">
-
       <div className="App-header">
+        <img src={logo} alt="ShopYourLikes"/>
         <h1>{this.props.location.state.userVal}</h1>
-        <h3>Bio</h3>
       </div>
 
-      <div>
-        <ul className="App-list">
-          {this.state.linklist.map((name, index) => {
-            if (name.priority === 1 && name.priority === this.state.linklist.length) {
-              return <li key={index}>
-              <a className="App-onelink" href={name.url}>{name.title}</a>
-            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-            </li>;
-            } else if (name.priority === 1) {
-              return <li key={index}>
-              <a className="App-onelink" href={name.url}>{name.title}</a>
-              <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
-            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-            </li>;
-            } else if (name.priority === this.state.linklist.length) {
-              return <li key={index}>
-              <a className="App-onelink" href={name.url}>{name.title}</a>
-            <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
-            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-            </li>;
-            } else {
-            return <li key={index}>
-              <a className="App-onelink" href={name.url}>{name.title}</a>
-            <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
-            <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
-            <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-            </li>;
-            }
-          })}
-        </ul>
-      </div>
-
-      <div>
-        <form onSubmit={this.handleAddLinkSubmit}>
-          <label>
-          <br></br><br></br>
-            Add New Link:
-            <br></br>
-            Title:
-            <input type="text" name="title" onChange={this.handleChangeTitle} />
-            <br></br>
-            Url:
-            <input type="text" name="url" onChange={this.handleChangeURL} />
-            <br></br>
-          </label>
-          <button type="submit">Add new link</button>
-        </form>
-      </div>
-
-<br></br>
-<br></br>
-
-          {/*
-      <div>
-        <form onSubmit={this.handleDeleteLinkSubmit}>
-          <label>
-            Enter Title of Post to delete:<br></br>
-            <input type="text" name="deleteTitle" onChange={this.handleDeleteChange} />
-          </label>
-          <br></br>
-          <button type="submit">Delete Post</button>
-        </form>
-      </div>
-          */}
-
-      <br/>
-      {/* section for the external page's cosmetic settings */}
-      {/* TODO: make it so both of the radio buttons are automatically
-       selected on whatever the client orginally picked */}
-      <div className="settingsBox">
-
-        <div className="dropdownbtn">
-          <button onClick={this.showMenu} className="themes-button">Themes</button>
-          <br/>
-          {
-            this.state.showMenu
-              ? (
-                <div className="theme-selection-container">
-                  <button id="Default" className="theme-selection" onClick={this.selectNewTheme}>Theme 0</button>
-                  <br/>
-                  <button id="Theme1" className="theme-selection" onClick={this.selectNewTheme}> Theme 1</button>
-                  <br/>
-                  <button id="Theme2" className="theme-selection" onClick={this.selectNewTheme}> Theme 2 </button>
-                  <br/>
-                  <button id="Theme3" className="theme-selection" onClick={this.selectNewTheme}> Theme 3 </button>
-                  <br/>
-                  <button id="Theme4" className="theme-selection" onClick={this.selectNewTheme}> Theme 4 </button>
-                  <br/>
-                  <button id="Theme5" className="theme-selection" onClick={this.selectNewTheme}> Theme 5 </button>
-                </div>
-              )
-              : (
-                null
-              )
-          }
-        </div>
-
-
-        <br/>
-        <br/>
-
-        {/* Options to select black or white text */}
-        <label>White</label>
-        <input type="radio" name="TextColor" input="White"/>
-
-        <label>Black</label>
-        <input type="radio" name="TextColor" input="Black"/>
-
-        <br/>
-        <br/>
-
-        {/* Options to select clear or filled buttons */}
-        <label>Clear</label>
-        <input type="radio" name="ButtonStyle" input="Clear" onClick={this.buttonStyleClear}/>
-
-        <label >Filled</label>
-        <input type="radio" name="ButtonStyle" input="Filled" onClick={this.buttonStyleFilled}/>
-
-        <br/>
-        <br/>
-
-        {/* Form to inputfile */}
+      {/* left side */}
+      <div className="split left">
         <div>
-          <input type="file" onChange={this.fileChangedHandler}/>
-          <br/>
+
+          <form onSubmit={this.handleAddLinkSubmit}>
+            <label>
+              <div className="link-input">
+                <h3>Add a new link</h3>
+                Title:
+                <br/>
+                <input type="text" name="title" placeholder="Link Title..." className="title-form" onChange={this.handleChangeTitle} />
+              </div>
+              <div className="link-input">
+                Url:
+                <br/>
+                <input type="text" name="url" placeholder="Link Address..." className="address-form" onChange={this.handleChangeURL} />
+              </div>
+              <button type="submit" className="link-submit-button">Add new link</button>
+              <br/>
+            </label>
+          </form>
         </div>
 
-        {/* button to save settings   */}
+        <br></br>
+        <br></br>
+
         <br/>
-        <button onClick={this.saveSettings}>Save!</button>
+        {/* section for the external page's cosmetic settings */}
+        {/* TODO: make it so both of the radio buttons are automatically
+        selected on whatever the client orginally picked */}
+        <div className="settingsBox">
+
+          <h3>Page Settings</h3>
+
+          <div className="theme-options">
+            Themes
+            <br/>
+            <select id="themes" name="themes" onChange={this.handleThemeOptions}>
+              <option value="None" onChange={this.handleThemeOptions}></option>
+              <option value="Default" onChange={this.handleThemeOptions}>Default</option>
+              <option value="Light-Colorful" onChange={this.handleThemeOptions}>Light and Colorful</option>
+              <option value="Green" onChange={this.handleThemeOptions}>Green</option>
+              <option value="Red" onChange={this.handleThemeOptions}>Red</option>
+              <option value="Dark" onChange={this.handleThemeOptions}>Dark</option>
+              <option value="Earthy" onChange={this.handleThemeOptions}>Earthy</option>
+            </select>
+          </div>
+
+          <br/>
+
+          {/* Options to select black or white text */}
+          <div className="text-color-options">
+            <label for="textColor">Change Page Text Color</label>
+            <br/>
+            <select id="textColor" name="textColor" onChange={this.handleTextColorOptions}>
+              <option value="None" onChange={this.handleTextColorOptions}></option>
+              <option value="Black" onChange={this.handleTextColorOptions}>Black</option>
+              <option value="White" onChange={this.handleTextColorOptions}>White</option>
+            </select>
+          </div>
+
+          <br/>
+
+          {/* Options to select clear or filled buttons */}
+          <div className="button-style-options">
+            <label for="buttonStyle">Change Button Style</label>
+
+            <br/>
+            <select id="buttonStyle" name="buttonStyle" onChange={this.handleButtonStyleOptions}>
+              <option value="None" onChange={this.handleButtonStyleOptions}></option>
+              <option value="Clear" onChange={this.handleButtonStyleOptions}>Clear</option>
+              <option value="Filled" onChange={this.handleButtonStyleOptions}>Filled</option>
+            </select>
+          </div>
+
+          <br/>
+
+          {/* Options to turn on or off the photo background */}
+          <div className="enable-photo-options">
+            <label for="photos-enabled">Enable Background Photo</label>
+
+            <br/>
+            <select id="photos-enabled" name="photos-enabled" onChange={this.handlePhotoOptions}>
+              <option value="None" onChange={this.handlePhotoOptions}></option>
+              <option value="On" onChange={this.handlePhotoOptions}>On</option>
+              <option value="Off" onChange={this.handlePhotoOptions}>Off</option>
+            </select>
+          </div>
+
+          <br/>
+
+          {/* Form to inputfile */}
+          <div className="input-file">
+            <label className="photo-button" for="photo-upload">Add A Background Photo</label>
+            <br/>
+            <input id="photo-upload" name="photo-upload" type="file" onChange={this.fileChangedHandler}/>
+          </div>
+
+          {/* button to save settings   */}
+          <br/><br/>
+          <button className="save-button" onClick={this.saveSettings}>Save!</button>
+          <br/><br/>
+
+        </div>
+
+
+        <div className="link-buttons">
+          <h3>Other Pages</h3>
+          <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button" className="extern-view">See Link Page</button></Link>
+          <br/><br/>
+          <Link to="/stats"><button type="button" className="stats-view">Statistics Report</button></Link>
+        </div>
+        
         <br/>
+
+        <hr/>
+        <br/>
+
+        <button className="sign-out-button" onClick={this.handleSignout.bind(this)}>Sign Out</button>
+
+        <br/><br/>
 
       </div>
 
-      <br/>
-      <br/>
 
-      <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button">See Link List</button></Link>
+      {/* right side */}
+      <div className="split right">
+        <div>
+          <br/>
+          <ul className="App-list">
+            {this.state.linklist.map((name, index) => {
+              if (name.priority === 1 && name.priority === this.state.linklist.length) {
+                return <li key={index}>
+                <a className="App-onelink" href={name.url}>{name.title}</a>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              </li>;
+              } else if (name.priority === 1) {
+                return <li key={index}>
+                <a className="App-onelink" href={name.url}>{name.title}</a>
+                <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              </li>;
+              } else if (name.priority === this.state.linklist.length) {
+                return <li key={index}>
+                <a className="App-onelink" href={name.url}>{name.title}</a>
+              <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              </li>;
+              } else {
+              return <li key={index}>
+                <a className="App-onelink" href={name.url}>{name.title}</a>
+              <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
+              <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+              </li>;
+              }
+            })}
+          </ul>
+        </div>
+      <br/><br/><br/>
+      </div>
 
-      <br></br>
-      <br></br>
 
-      <Link to={`/stats/${this.props.location.state.userVal}`}><button type="button">Statistics Report</button></Link>
 
-      <br></br>
-
-      <hr/>
-      
-      
 
       </div>
     );

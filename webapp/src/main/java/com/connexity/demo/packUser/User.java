@@ -49,9 +49,9 @@ public class User {
         this.email = "default@gmail.com";
         this.hash = "";
         this.datejoined = LocalDate.now();
-        this.textcolor = false;
-        this.buttonstyle = false;
-        this.profilepic = false;
+        this.textcolor = true;
+        this.buttonstyle = true;
+        this.profilepic = true;
         this.theme = 0;
     }
 

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios/index";
 import './Tree.css';
-import logo from './../img/logo dark.svg';
+import darkLogo from './../img/logo dark.svg';
+import whiteLogo from './../img/logoColor.svg'
 
 const MESSAGE_URL = "/links";
 
@@ -24,7 +25,11 @@ class Tree extends Component {
             title: "", 
             url: "",
             priority: 0,
-            deleteTitle: ""
+            deleteTitle: "",
+            textColor: true,
+            buttonStyle: true,
+            renderPhotoBackground: true,
+            theme: 0,
         };
     }
 
@@ -40,6 +45,19 @@ class Tree extends Component {
           } catch (error) {
               this.setState({error: "Error!"});
           } 
+
+        try {
+            const DBsettings = await axios.get("/" + this.username)
+            this.setState({
+                textColor: DBsettings.data.textcolor,
+                buttonStyle: DBsettings.data.buttonstyle,
+                renderPhotoBackground: DBsettings.data.profilepic,
+                theme: DBsettings.data.theme,
+            });
+
+        } catch(error){
+            console.log("Error gettings settings")
+        }
     }
 
     getTheme(index) {
@@ -73,9 +91,9 @@ class Tree extends Component {
                 break;
             //monochrome and orange
             case 4:
-                theme[0] = "#EFFFFA"
+                theme[0] = "#000103"
                 theme[1] = "#515052"
-                theme[2] = "#000103"
+                theme[2] = "#EFFFFA"
                 theme[3] = "#333138"
                 theme[4] = "#FF312E"
                 break;
@@ -98,30 +116,64 @@ class Tree extends Component {
         return theme
     }
 
+    //function which returns which logo the user has selected
+    getLogo() {
+        if (this.state.textColor /*TODO*/) {
+            return darkLogo
+        }
+        else {
+            return whiteLogo
+        }
+    }
+
+    //function which returns the users selected username color
+    usernameColor() {
+        if (this.state.textColor) { //TODO
+            return {color : "black"}
+        }
+        else {
+            return {color : "white"}
+        }
+    }
+
+
     render() {
         const {match: {params}} = this.props;
 
         //get the theme
-        var themeColors = this.getTheme(1)
+        var themeColors = this.getTheme(this.state.theme)
         var themeIndex = 0
+        var buttonStyle = this.state.buttonStyle
         function getColor() {
-            themeIndex++
-            console.log(themeColors[themeIndex%4 + 1])
-            return themeColors[themeIndex%4 + 1]
+            if (buttonStyle) {  /*TODO*/ 
+                themeIndex++
+                return themeColors[themeIndex%4 + 1]
+            }
+            else {
+                return null
+            }
         }
 
         //background image
-        var backgroundStyle = {
-            backgroundImage: 'url(' + this.userImage + ')',
-            overflow:'hidden',
-            backgroundColor: themeColors[0]
-
-        };
+        if (this.state.renderPhotoBackground) {
+            var backgroundStyle = {
+                backgroundImage: 'url(' + this.userImage + ')',
+                overflow:'hidden',
+                backgroundColor: themeColors[0]
+            };
+        } else {
+            var backgroundStyle = {
+                overflow:'hidden',
+                backgroundColor: themeColors[0]
+            };
+        }
+        
 
         return (
-            <div  style={backgroundStyle} id="Background">
+            <div style={backgroundStyle} id="Background">
                 <br/>
-                <h3 id="Username"> @{this.username}</h3>
+                <h3 style={this.usernameColor()} id="Username" > @{this.username}</h3>
+                <div className="link-container">
                 {this.state.listOfLinks.map(function(name, index){
                     let linkStyle = {
                         backgroundColor: getColor(),
@@ -130,10 +182,11 @@ class Tree extends Component {
                         <a href={name.url}><div style={linkStyle} className="Link-box" key={index}>{name.title}</div></a>
                         );
                 })}
+                </div>
                 <br/>
-                <hr color="white"/>
+                <br/>
                 <div id="Logo">
-                    <img src={logo} alt="ShopYourLikes"/>
+                    <img src={this.getLogo()} alt="ShopYourLikes"/>
                 </div>
             </div>
         );
