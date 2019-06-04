@@ -511,6 +511,7 @@ class Linklist extends Component {
 
       </div>
 
+
       {/* right side */}
       <div className="split right">
         <div>
@@ -547,6 +548,7 @@ class Linklist extends Component {
         </div>
       <br/><br/><br/>
       </div>
+
 
 
 

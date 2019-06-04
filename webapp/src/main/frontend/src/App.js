@@ -37,7 +37,7 @@ class App extends Component {
         <Route exact path="/insta_login" component={InstagramLogin}/>
         <Route exact path="/insta_signup" component={InstagramSignup}/>
         <Route exact path="/tree/:user" component={Tree}/>
-        <Route exact path="/stats" component={Stats}/>
+        <Route exact path="/stats/:user" component={Stats}/>
       </div>
       </Router>
     );
