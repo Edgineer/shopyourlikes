@@ -4,6 +4,9 @@ import axios from "axios/index";
 import './../App.css';
 import './Linklist.css';
 import logo from "./../img/logoColor.svg"
+import logoTrash from "./../img/icons_trash.png";
+import logoUp from "./../img/icons_up.png";
+import logoDown from "./../img/icons_down.png";
 
 
 
@@ -69,6 +72,7 @@ class Linklist extends Component {
 
     axios.post(MESSAGE_URL + "/", userLink)
       .then(res => {
+        this.setState({title : "", url: ""});
         this.fetchMessage();
       }).catch(function(error) {
         // console.log("failed to add a new link")
@@ -105,6 +109,35 @@ class Linklist extends Component {
         });
       }
     
+    } else {
+
+      let count = 0;
+      for (let i = 1; i < this.state.linklist.length; i++) {
+
+        const userLink = {
+          "username": this.props.location.state.userVal,
+          "title": this.state.linklist[i].title,
+          "url": this.state.linklist[i].url,
+          "priority": this.state.linklist[i].priority - 1
+        };
+
+        axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {
+          count++;
+          if (count === this.state.linklist.length - 1) {
+
+            const userUpLink = {
+              "username": this.props.location.state.userVal,
+              "title": this.state.linklist[0].title,
+              "url": this.state.linklist[0].url,
+              "priority": this.state.linklist.length
+            };
+      
+            axios.put(MESSAGE_URL + "/" + this.state.linklist[0]._id, userUpLink).then( res => {
+              this.fetchMessage();
+            });
+          }
+        });
+      }
     }
   }
 
@@ -138,6 +171,35 @@ class Linklist extends Component {
         });
       }
     
+    } else {
+
+      const userDownLink = {
+        "username": this.props.location.state.userVal,
+        "title": this.state.linklist[this.state.linklist.length - 1].title,
+        "url": this.state.linklist[this.state.linklist.length - 1].url,
+        "priority": 1
+      };
+
+      axios.put(MESSAGE_URL + "/" + this.state.linklist[this.state.linklist.length - 1]._id, userDownLink).then( res => {
+        let count = 1;
+        for (let i = 0; i < this.state.linklist.length - 1; i++) {
+
+          const userLink = {
+            "username": this.props.location.state.userVal,
+            "title": this.state.linklist[i].title,
+            "url": this.state.linklist[i].url,
+            "priority": this.state.linklist[i].priority + 1
+          };
+
+          axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {
+            count++;
+            if (count === this.state.linklist.length) {
+              this.fetchMessage();
+            }
+          });
+        }
+      });
+
     }
   }
 
@@ -378,8 +440,85 @@ class Linklist extends Component {
     this.props.history.push({pathname: "/"});
   }
 
+  getTheme(index) {
+    //let index 0 be the background
+    var theme = ['#0', '#0', '#0', '#0', '#0'];
+
+    switch(index){
+        //light colors
+        case 1:
+            theme[0] = '#E8D7FF'
+            theme[1] = '#FFD3E8'
+            theme[2] = '#FFD7D5'
+            theme[3] = '#F3FFE1'
+            theme[4] = '#DFFFD6'
+            break;
+        //bunch of greens
+        case 2:
+            theme[0] = "#5BBA6F"
+            theme[1] = "#3FA34D"
+            theme[2] = "#2A9134"
+            theme[3] = "#137547"
+            theme[4] = "#054A29"
+            break;
+        //bunch of reds
+        case 3:
+            theme[0] = "#C52233"
+            theme[1] = "#A51C30"
+            theme[2] = "#A7333F"
+            theme[3] = "#74121D"
+            theme[4] = "#580C1F"
+            break;
+        //monochrome and orange
+        case 4:
+            theme[0] = "#000103"
+            theme[1] = "#515052"
+            theme[2] = "#EFFFFA"
+            theme[3] = "#333138"
+            theme[4] = "#FF312E"
+            break;
+        //autumn
+        case 5: 
+            theme[0] = "#A6A57A"
+            theme[1] = "#27213C"
+            theme[2] = "#5A352A"
+            theme[3] = "#A33B20"
+            theme[4] = "#A47963"
+            break;
+        default:
+            theme[0] = "#5BD9E7"
+            theme[1] = "#FFFFFF"
+            theme[2] = "#FFFFFF"
+            theme[3] = "#FFFFFF"
+            theme[4] = "#FFFFFF"
+    }
+
+    return theme
+}
+
 
   render() {
+    //get the theme
+    var themeColors = this.getTheme(this.state.savedTheme)
+    var themeIndex = 0
+    var buttonStyle = this.state.savedButtonStyle
+    function getColor() {
+        if (buttonStyle) {  /*TODO*/ 
+            themeIndex++
+            return themeColors[themeIndex%4 + 1]
+        }
+        else {
+            return null
+        }
+    }
+
+    //get the background colors for the tree
+    var backgroundStyle = {
+      overflow: 'hidding',
+      backgroundColor: themeColors[0]
+    };
+
+
     return (
       <div className="App">
       <div className="App-header">
@@ -397,12 +536,12 @@ class Linklist extends Component {
                 <h3>Add a new link</h3>
                 Title:
                 <br/>
-                <input type="text" name="title" placeholder="Link Title..." className="title-form" onChange={this.handleChangeTitle} />
+                <input type="text" name="title" placeholder="Link Title..." value={this.state.title} className="title-form" onChange={this.handleChangeTitle} />
               </div>
               <div className="link-input">
                 Url:
                 <br/>
-                <input type="text" name="url" placeholder="Link Address..." className="address-form" onChange={this.handleChangeURL} />
+                <input type="text" name="url" placeholder="Link Address..." value={this.state.url} className="address-form" onChange={this.handleChangeURL} />
               </div>
               <button type="submit" className="link-submit-button">Add new link</button>
               <br/>
@@ -439,7 +578,7 @@ class Linklist extends Component {
 
           {/* Options to select black or white text */}
           <div className="text-color-options">
-            <label for="textColor">Change Page Text Color</label>
+            <label for="textColor">Change Username Text Color</label>
             <br/>
             <select id="textColor" name="textColor" onChange={this.handleTextColorOptions}>
               <option value="None" onChange={this.handleTextColorOptions}></option>
@@ -513,34 +652,27 @@ class Linklist extends Component {
 
 
       {/* right side */}
-      <div className="split right">
-        <div>
+      <div  style={backgroundStyle} className="split right">
+        <div >
           <br/>
           <ul className="App-list">
             {this.state.linklist.map((name, index) => {
+
+              let linkStyle = {
+                backgroundColor: getColor(),
+              } 
+
               if (name.priority === 1 && name.priority === this.state.linklist.length) {
                 return <li key={index}>
-                <a className="App-onelink" href={name.url}>{name.title}</a>
-              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-              </li>;
-              } else if (name.priority === 1) {
-                return <li key={index}>
-                <a className="App-onelink" href={name.url}>{name.title}</a>
-                <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
-              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
-              </li>;
-              } else if (name.priority === this.state.linklist.length) {
-                return <li key={index}>
-                <a className="App-onelink" href={name.url}>{name.title}</a>
-              <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
-              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+                <a style={linkStyle} className="App-onelink" href={name.url}>{name.title}</a>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}><img src={logoTrash} alt="LogoTrash" /></button>
               </li>;
               } else {
               return <li key={index}>
-                <a className="App-onelink" href={name.url}>{name.title}</a>
-              <button onClick={() => {this.handleUpdatePriorityUp(name)}}>Move Up</button>
-              <button onClick={() => {this.handleUpdatePriorityDown(name)}}>Move Down</button>
-              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}>Delete Link</button>
+                <a style={linkStyle} className="App-onelink" href={name.url}>{name.title}</a>
+              <button onClick={() => {this.handleUpdatePriorityUp(name)}}><img className="up-logo" src={logoUp} alt="LogoUp" /></button>
+              <button onClick={() => {this.handleUpdatePriorityDown(name)}}><img className="down-logo" src={logoDown} alt="LogoDown" /></button>
+              <button onClick={() => {this.handleDeleteLinkSubmit(name._id)}}><img className="trash-logo" src={logoTrash} alt="LogoTrash" /></button>
               </li>;
               }
             })}
