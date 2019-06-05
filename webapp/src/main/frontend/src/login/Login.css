@@ -3,6 +3,10 @@ a {
     text-decoration: none;
 }
 
+.Hidden-button {
+    visibility: hidden;
+}
+
 .Login-box {
     border-radius: 10px;
     background-color: white;
@@ -23,6 +27,26 @@ a {
     padding: 20px;
     text-align: center;
     width: 100%;
+}
+
+.username-field {
+    position: relative;
+    padding: 5px;
+    width: 300px;
+    border: none;
+    color: black;
+    border-bottom: 1px solid grey;
+    font-size: 15px;
+}
+
+.password-field {
+    position: relative;
+    padding: 5px;
+    width: 300px;
+    color: black;
+    border: none;
+    border-bottom: 1px solid grey;
+    font-size: 15px;
 }
   
 #Login-subtext {
@@ -46,6 +70,7 @@ a {
     bottom: 30px;
     text-align: center;
     width: 50%;
+    cursor: pointer;
 }
   
 #New-account-link {
@@ -61,4 +86,8 @@ a {
     width: 50%;
     padding: 10px;
     padding-bottom: 20px;
+}
+
+.instagram-text {
+    height: 25px;
 }

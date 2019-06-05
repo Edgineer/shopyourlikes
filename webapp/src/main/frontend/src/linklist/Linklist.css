@@ -1,64 +1,221 @@
-.themes-button {
+.sign-out-button {
+    position: relative;
+    text-align: center;
+    width: 100px;
+    height: 40px;
+    right: 20px;
+    font-size: 15px;
     background-color: #3498DB;
     color: white;
-    width: 100px;
-    height: 50px;
-    /* padding: 16px; */
-    font-size: 16px;
-    border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-.themes-button:hover, .themes-button:focus {
-    background-color: #2980B9;
-}
-
-.dropdownbtn {
+.link-input {
+    padding: 5px;
     position: relative;
-    display: inline-block;
+    text-align: left;
+    left: 30px;
+    
 }
 
-.theme-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+.title-form {
+    width: 30vw;
+    border: 1px solid #ccc;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 4px;
+
 }
 
-.theme-selection-container {
+.address-form {
+    width: 30vw;
+    border: 1px solid #ccc;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 4px;
+
+}
+
+.link-submit-button {
     position: relative;
-    display: inline-block;
+    float: left;
+    width: 72px;
+    height: 40px;
+    left: 35px;
+    border-radius: 4px;
+    background-color: #3498DB;
+    color: white;
+    cursor: pointer;
 }
 
-.theme-selection {
-    width: 100px;
-    height: 50px;
-    font-size: 16px;
-    z-index: 1;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    text-decoration: none;
+.theme-options {
+    position: relative;
+    left: 20px;
 }
 
-/* .dropdown-content a {
-    color: black;
-    padding: 12px x16px;
-    text-decoration: none;
-    display: block;
-} */
-
-.dropdown-content a:hover {
-    background-color: #ddd;
+#themes {
+    position: relative;
+    width: 300px;
+    height: 20px;
+    padding: 20px;
 }
 
-.show {
-    display:block;
+.text-color-options {
+    position: relative;
+    left: 20px;
+}
+
+#textColor {
+    position: relative;
+    width: 300px;
+    height: 20px;
+    padding: 20px;
+}
+
+.button-style-options {
+    position: relative;
+    left: 20px;
+}
+
+#buttonStyle {
+    position: relative;
+    width: 300px;
+    height: 20px;
+    padding: 20px; 
+}
+
+.enable-photo-options {
+    position: relative;
+    left: 20px;
+}
+
+#photos-enabled {
+    position: relative;
+    width: 300px;
+    height: 20px;
+    padding: 20px;
+}
+
+.input-file {
+    position: relative;
+    left: 20px;
 }
 
 .settingsBox {
-    outline: solid;
-    padding: 25px;
-    width: 300px;
-    margin: auto;
+    position: relative;
+    text-align: left;
+    left: 30px;
 }
+
+.photo-button {
+    position: relative;
+    background-color: #3498DB;
+    color: white;
+    padding: 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#photo-upload {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.save-button {
+    position: relative;
+    width: 60px;
+    height: 35px;
+
+    border: solid;
+    border-color: #3498DB;
+    border-radius: 4px;
+
+    cursor: pointer;
+}
+
+.link-buttons {
+    position: relative;
+    text-align: left;
+    left: 30px;
+}
+
+.extern-view {
+    font-size: 15px;
+    width: 200px;
+    height: 40px;
+    left: 35px;
+    border-radius: 4px;
+    background-color: #3498DB;
+    color: white;
+    cursor: pointer;
+}
+
+.stats-view {
+    font-size: 15px;
+    width: 200px;
+    height: 40px;
+    left: 35px;
+    border-radius: 4px;
+    background-color: #3498DB;
+    color: white;
+    cursor: pointer;
+}
+
+.split {
+    width: 50%;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+    top: 240px;
+    z-index: 1;
+}
+
+.left {
+    left: 0;
+    background-color: white;
+    border-left: solid #ff6666 3vw;
+    height: 75vh;
+    /* background-color: #a5a5b2; */
+}
+
+.right {
+    right: 0;
+    background-color: #5BD9E7;
+    border-left: solid black 1.5px;
+    height: 75vh;
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 222px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    z-index: -1;
+  }
+
+  .App-onelink {
+    background-color: white;
+    border: solid;
+    color: black;
+    width: 25vw;
+    transform: translate(-50%, 0);
+    padding: 16px 32px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+    opacity: 1;
+    transition: 0.3s;
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+  }

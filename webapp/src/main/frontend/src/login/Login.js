@@ -7,9 +7,16 @@ import instagram_logo from "./instagram_logo.svg"
 import './../App.css';
 import './Login.css';
 
-const INSTA_API = "https://api.instagram.com/oauth/authorize/?" +
+import axios from "axios/index";
+
+
+const INSTA_LOGIN = "https://api.instagram.com/oauth/authorize/?" +
                 "client_id=0730e096783745e7a0da8eed3152b8f6" + "&" + 
-                "redirect_uri=http://localhost:3000/insta_auth" + "&" +
+                "redirect_uri=http://localhost:3000/insta_login" + "&" +
+                "response_type=token";
+const INSTA_SIGNUP = "https://api.instagram.com/oauth/authorize/?" +
+                "client_id=0730e096783745e7a0da8eed3152b8f6" + "&" + 
+                "redirect_uri=http://localhost:3000/insta_signup" + "&" +
                 "response_type=token";
 
 
@@ -22,6 +29,7 @@ class Login extends Component {
     }
   }
 
+
   handleChangeUsername = event => {
     this.setState({ username: event.target.value });
   }
@@ -32,28 +40,57 @@ class Login extends Component {
     });
   }
 
+  handleLogin(event) {
+    //Prevent page from reloading
+    event.preventDefault();
+
+    axios.get('/match/' + this.state.username + '/' + this.refs.password.value).then(res => {
+
+      if(res.data === '') //If empty string
+        alert("Username and Password are not correct.");
+      else{
+        //Store the token
+        const serializedState = JSON.stringify(res.data);
+        localStorage.setItem('token', serializedState);
+
+        //Redirect to user's profile
+        this.props.history.push({pathname: '/linktree', state: {userVal: this.state.username}});
+      }
+    })
+    
+  }
+
+
+
   render() {
+
     if (this.state.signIn === true)
     {
       return (
         <div className="Login-title">
           <ul className="Login-box">
             <img id="Login-logo" src={logoColor} alt="ShopYourLikes"/>
-            {/* <h2 id="Login-subtext">Login to continue</h2> */}
             <hr width="87%" align="left"/>
-            <a href={INSTA_API}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
-            <hr width="87%" align="left" color="#a5a5b2"/>
 
+            <div display="inline-block">
+              {/* <div className="instagram-text">Login with Instagram</div> */}
+              <a href={INSTA_LOGIN}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
+            </div>
 
-            <form>
-              <input type="text" placeholder="Username" name="username" onChange={this.handleChangeUsername} ></input>
-              <br />
-              <input type="text" placeholder="Password"></input>
+            <p clear="both">-or-</p>
+
+            <form onSubmit={this.handleLogin.bind(this)}>
+              <input type="text" placeholder="Username" name="username" onChange={this.handleChangeUsername} required="required" className="username-field"></input>
+              <br/><br/>
+              <input type="password" placeholder="Password" ref="password" required="required" className="password-field"></input>
+
+              {/* Hidden button, so the button below can link to it*/}
+              <input type="submit" id="submit-login"  class="Hidden-button"/>
             </form>
 
             <br/>
-            <Link to={{pathname: '/linktree', state: {userVal: this.state.username}}} ><p id="Login-button">Log In</p></Link>
-            
+            {/*<Link to={{pathname: '/linktree', state: {userVal: this.state.username}}} ><p id="Login-button">Log In</p></Link>*/}
+            <label for="submit-login"><p id="Login-button">Log In</p></label>
             <br/>
           </ul>
 
@@ -66,24 +103,14 @@ class Login extends Component {
       return (
         <div className="Login-title">
           <h1>ShopYourLikes</h1> 
-          <h2 id="Login-subtext">Enter your user information</h2>
+          <h2 id="Login-subtext">Instagram Login</h2>
           <ul className="Login-box">
-            <p>Login with instagram</p>
-            <hr width="87%" align="left"/>
-
-            <form>
-              <input type="text" placeholder="Email" ></input>
-              <br />
-              <input type="text" placeholder="Username" ></input>
-              <br />
-              <input type="text" placeholder="Password"></input>
-              <br />
-              <input type="test" placeholder="Repeat password"></input>
-            </form>
-
+            Before creating your account, please log in to Instagram:
             <br/>
-            <p id="Login-button"><Link to="/">Create Account</Link></p>
-            <br/>
+            <div display="inline-block">
+              {/* <div className="instagram-text">Login with Instagram</div> */}
+              <a href={INSTA_SIGNUP}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
+            </div>
           </ul>
 
           <br/>
