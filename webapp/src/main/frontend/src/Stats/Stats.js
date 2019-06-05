@@ -69,6 +69,13 @@ class Stats extends Component {
                              'rgba(220, 255, 251, 1)']
                        }]
                 },
+                ClicksPerRegionData:{
+                   labels: ['Oregon', 'Florida', 'California', 'Arizona', 'New York', 'Other Countries'],
+                   datasets:[
+                       {data: [280, 123, 3500, 457, 1395, 876],
+                       backgroundColor: ['rgba(255, 221, 221, 0.7)']
+                   }]
+                 },
                 loading: false
                 });
             },
@@ -85,7 +92,6 @@ class Stats extends Component {
 
     getData(){
         this.getClicksPerDayData();
-        this.getClicksPerRegionData();
     }
 
 
@@ -98,39 +104,25 @@ class Stats extends Component {
                 datasets:[
                     {data:[120000, 150000, 170000, 163000, 180000, 200000, 190000, 210000, 220000, 200000, 255000, 280000],
                     backgroundColor:[
-                    'rgba(54, 162, 235, 0.6)',
-                    'rgba(115, 183, 252, 0.6)',
-                    'rgba(255, 206, 86, 0.6)',
-                    'rgba(75, 192, 192, 0.6)',
-                    'rgba(153 , 102, 255, 0.6)',
-                    'rgba(255, 99, 132, 0.6)',
-                    'rgba(255, 99, 132, 0.6)',
-                    'rgba(54, 162, 235, 0.6)',
-                    'rgba(115, 183, 252, 0.6)',
-                    'rgba(255, 206, 86, 0.6)',
-                    'rgba(75, 192, 192, 0.6)',
-                    'rgba(153 , 102, 255, 0.6)',
-                    'rgba(255, 99, 132, 0.6)',
-                    'rgba(255, 99, 132, 0.6)']
+                         'rgba(255, 221, 221, 1)',
+                         'rgba(255, 255, 207, 1)',
+                         'rgba(217, 255, 223, 1)',
+                         'rgba(217, 255, 255, 1)',
+                         'rgba(255, 206, 86, 1)',
+                         'rgba(224, 254, 254, 1)',
+                         'rgba(199, 206, 234, 1)',
+                         'rgba(255, 218, 193, 1)',
+                         'rgba(255, 154, 162, 1)',
+                         'rgba(255, 255, 216, 1)',
+                         'rgba(181 , 234, 215, 1)',
+                         'rgba(193, 231, 227, 1)',
+                         'rgba(220, 255, 251, 1)']
                     }
                 ]
             }
         });
     }
 
-
-
-    getClicksPerRegionData(){
-        this.setState({
-            ClicksPerRegionData:{
-                       labels: ['Oregon', 'Florida', 'California', 'Arizona', 'New York', 'Other Countries'],
-                       datasets:[
-                           {data: [280, 123, 3500, 457, 1395, 876],
-                           backgroundColor: ['rgba(149, 125, 173, 1)']
-                       }]
-                   }
-        });
-    }
 
 
    render() {
@@ -150,12 +142,13 @@ class Stats extends Component {
                 </div>
                 <br></br>
                 <div className="ClicksPerDay-box">
-                <ClicksPerDay ClicksPerDayData={this.state.ClicksPerDayData} />
+                <ClicksPerRegion ClicksPerRegionData={this.state.ClicksPerRegionData}/>
                 </div>
                 <br></br>
                 <div className="ClicksPerDay-box">
-                <ClicksPerRegion ClicksPerRegionData={this.state.ClicksPerRegionData}/>
+                <ClicksPerDay ClicksPerDayData={this.state.ClicksPerDayData} />
                 </div>
+
             </div>
     }
     return(
