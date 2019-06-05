@@ -123,30 +123,11 @@ class Stats extends Component {
     getClicksPerRegionData(){
         this.setState({
             ClicksPerRegionData:{
-                       labels: ['California', 'New York', 'Arizona', 'Oregon', 'Florida', 'Texas', 'Washington', 'Hawaii', 'Alabama', 'Georgia', 'New Jersey', 'Virginia',
-                       'Colorado', 'Illinois', 'Ohio','Other Countries'],
+                       labels: ['Oregon', 'Florida', 'California', 'Arizona', 'New York', 'Other Countries'],
                        datasets:[
-                           {label:'Vlogs',
-                            data:[1881, 542, 1341, 3349, 1499, 1619, 776, 2560, 1789, 1965, 343, 2501, 562, 1781, 2042, 745],
-                            backgroundColor:['rgba(255, 99, 132, 0.3)']
-                           },
-                           {label:'Etsy Shop',
-                            data:[2628, 772, 1159, 441, 1015, 2555, 1150, 1029, 2975, 2725, 2704, 2411, 1308, 1074, 2958, 2761],
-                            backgroundColor:['rgba(54, 162, 235, 0.3)']
-                           },
-                           {label:'Favorites at HomeDepot',
-                            data:[1523, 3182, 329, 1027, 1998, 3162, 1973, 3417, 3480, 3161, 2016, 1257, 2652, 2025, 210, 1410],
-                            backgroundColor:['rgba(255, 206, 86, 0.6)']
-                           },
-                           {label:'Workout Videos',
-                            data:[240, 275, 3305, 1483, 882, 2214, 533, 1868, 2449, 3227, 1496, 447, 1061, 953, 1977, 1943],
-                            backgroundColor:['rgba(75, 192, 192, 0.6)']
-                           },
-                           {label:'My Cooking Channel',
-                            data:[3019, 467, 2828, 1193, 967, 216, 291, 725, 2651, 2680, 1599, 3223, 3456, 1472, 1658, 2628],
-                            backgroundColor:['rgba(153 , 102, 255, 0.6)']
-                           }
-                       ]
+                           {data: [280, 123, 3500, 457, 1395, 876],
+                           backgroundColor: ['rgba(149, 125, 173, 1)']
+                       }]
                    }
         });
     }

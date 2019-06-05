@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Bar, Line, Pie} from 'react-chartjs-2';
+import {Line} from 'react-chartjs-2';
 
 
 //bar chart and sample data must be used for
@@ -19,7 +19,7 @@ class ClicksPerRegion extends Component {
     //use this for personalization in the future
     static defaultProps = {
         displayTitle:true,
-        displayLegend:true,
+        displayLegend:false,
         legendPosition:'bottom',
         fontSize:20
     }
