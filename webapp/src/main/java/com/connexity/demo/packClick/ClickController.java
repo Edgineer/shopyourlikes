@@ -39,7 +39,7 @@ public class ClickController {
     //For a certain user get a list of {city,country,clicks} for all there links
     @GetMapping("/{username}/geo")
     List<Click> findUserTopLocations (@PathVariable(value = "username") String username){
-        Aggregation agg = newAggregation(
+        Aggregation agg = Aggregation.newAggregation(
           project("username"),
           project("city"),
           project("countryCode"),

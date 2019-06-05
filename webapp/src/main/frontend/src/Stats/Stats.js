@@ -37,18 +37,21 @@ class Stats extends Component {
             (result) => {
                 var arr = [];
                 var titlesArr = [];
+                var clicksArr = [];
                 for(var i = 0; i < result.length; i++)
                     arr.push(result[i]);
                 titlesArr = arr.map(link => link.title);
+                clicksArr = arr.map(link => link.clicks);
                 console.log(arr)
                 console.log(titlesArr)
+                console.log(clicksArr)
                 this.setState({
                 listOfLinks: arr,
                 linkTitles: titlesArr,
                 ClicksPerLinkData: {
                    labels: titlesArr,
                    datasets:[{
-                        data:[793, 1847,200],
+                        data: clicksArr,
                         backgroundColor:[
                              'rgba(54, 162, 235, 0.6)',
                              'rgba(255, 206, 86, 0.6)',
@@ -160,7 +163,6 @@ class Stats extends Component {
             <div className="Login-title">
                 <div className="App-header">
                     <h3>Click Statistics for {this.username} </h3>
-                    <h3>First Title: {this.state.linkTitles[0]} </h3>
                 </div>
                 <div className="ClicksPerDay-box">
                 <ClicksPerLink ClicksPerLinkData={this.state.ClicksPerLinkData} />
