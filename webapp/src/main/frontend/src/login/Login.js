@@ -102,15 +102,17 @@ class Login extends Component {
     else {
       return (
         <div className="Login-title">
-          <h1>ShopYourLikes</h1> 
-          <h2 id="Login-subtext">Instagram Login</h2>
-          <ul className="Login-box">
-            Before creating your account, please log in to Instagram:
-            <br/>
+          <ul className="Signup-box">
+            <img id="Login-logo" src={logoColor} alt="ShopYourLikes"/>
+            <hr width="87%" align="left"/>
             <div display="inline-block">
               {/* <div className="instagram-text">Login with Instagram</div> */}
-              <a href={INSTA_SIGNUP}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
+              <a postition="relative" text-align="center" href={INSTA_SIGNUP}> <img src={instagram_logo} width="70" alt="Login with Instagram"/></a>
             </div>
+            Before creating your account,
+            <br/>
+            please log in to Instagram
+            <br/>
           </ul>
 
           <br/>

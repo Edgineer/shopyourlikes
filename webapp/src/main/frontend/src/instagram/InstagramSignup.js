@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from "axios/index";
+import logoColor from ".././img/logoColor.svg"
 
 class InstagramSignup extends Component {
 	constructor(props) {
@@ -53,46 +54,31 @@ class InstagramSignup extends Component {
     render() {
         return (
         <div className="Login-title">
-          <h1>ShopYourLikes</h1> 
-          <h2 id="Login-subtext">Enter your new account info</h2>
-          <ul className="Login-box">
-            
+         <ul className="InputInfo-box" >
+            <img id="Login-logo" src={logoColor} alt="ShopYourLikes"/>
+            <hr width="87%" align="left"/>
 
             <form onSubmit={this.handleSubmit.bind(this)}>
-              <br/>
-              Instagram login succeeded!
-              <br/>
-              Please enter your new user info.
-              <br/>
-              <br/>
-              First Name
-              <br/>
-              <input type="text" placeholder="First name" ref="newFirst" required="required"></input>
+              <p font-size="8px">
+                Instagram login succeeded!
+                <br/>
+                Please enter your new user info.
+              </p>
+              <input className="firstNameInputForm" type="text" placeholder="First name" ref="newFirst" required="required"></input>
               <br />
-              Last Name
-              <br/>
-              <input type="text" placeholder="Last name" ref="newLast" required="required"></input>
+              <input className="lastNameInputForm" type="text" placeholder="Last name" ref="newLast" required="required"></input>
               <br />
-              Email
-              <br/>
-              <input type="text" placeholder="Email" ref="newEmail" required="required"></input>
+              <input className="emailInputForm" type="text" placeholder="Email" ref="newEmail" required="required"></input>
               <br />
-              Instagram Username
-              <br/>
-              <input type="text" placeholder="Instagram Username" ref="newUsername" required="required"></input>
+              <input className="usernameInputForm" type="text" placeholder="Instagram Username" ref="newUsername" required="required"></input>
               <br />
-              Password
-              <br/>
-              <input type="password" placeholder="Password" ref="newPassword" required="required"></input>
+              <input className="passwordInputForm" type="password" placeholder="Password" ref="newPassword" required="required"></input>
               <br />
-              Re-enter Password
-              <br/>
-              <input type="password" placeholder="Re-enter password" ref="newPasswordRepeat" required="required"></input>
+              <input className="reenterPassword" type="password" placeholder="Re-enter password" ref="newPasswordRepeat" required="required"></input>
               {/* Hidden button, so the button below can link to it*/}
               <input type="submit" id="submit-new-info"  class="Hidden-button"/>
             </form>
 
-            <br/>
             <p id="Login-button"><label for="submit-new-info">Create New Account</label></p>
             <br/>
           </ul>

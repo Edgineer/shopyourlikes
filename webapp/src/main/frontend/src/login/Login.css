@@ -19,6 +19,32 @@ a {
     text-align: left;
     position: relative;
   }
+
+.Signup-box {
+    border-radius: 10px;
+    background-color: white;
+    /* border-color: black;
+    border-width: 1px;
+    border-style: solid; */
+    width: 380px;
+    height: 250px;
+    margin: auto;
+    text-align: left;
+    position: relative;
+}
+
+.InputInfo-box {
+    border-radius: 10px;
+    background-color: white;
+    /* border-color: black;
+    border-width: 1px;
+    border-style: solid; */
+    width: 380px;
+    height: 600px;
+    margin: auto;
+    text-align: left;
+    position: relative;
+}
   
 .Login-title {
     background-color: #5BD9E7;
@@ -27,6 +53,8 @@ a {
     padding: 20px;
     text-align: center;
     width: 100%;
+    font-family:"Museo Sans Rounded";
+    font-style: 500, 700;
 }
 
 .username-field {
@@ -90,4 +118,70 @@ a {
 
 .instagram-text {
     height: 25px;
+}
+
+.firstNameInputForm {
+    position: relative;
+    padding: 5px;
+    width: 300px;
+    border: none;
+    color: black;
+    border-bottom: 1px solid grey;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.lastNameInputForm {
+    position: relative;
+    padding: 5px;
+    width: 300px;
+    border: none;
+    color: black;
+    border-bottom: 1px solid grey;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.emailInputForm {
+    position: relative;
+    padding: 5px;
+    width: 300px;
+    border: none;
+    color: black;
+    border-bottom: 1px solid grey;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.usernameInputForm {
+    position: relative;
+    padding: 5px;
+    width: 300px;
+    border: none;
+    color: black;
+    border-bottom: 1px solid grey;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.passwordInputForm {
+    position: relative;
+    padding: 5px;
+    width: 300px;
+    border: none;
+    color: black;
+    border-bottom: 1px solid grey;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.reenterPassword {
+    position: relative;
+    padding: 5px;
+    width: 300px;
+    border: none;
+    color: black;
+    border-bottom: 1px solid grey;
+    font-size: 15px;
+    margin-bottom: 10px;
 }
