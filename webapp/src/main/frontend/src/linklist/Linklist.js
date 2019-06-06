@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import axios from "axios/index";
 import './../App.css';
 import './Linklist.css';
@@ -518,7 +518,7 @@ class Linklist extends Component {
       backgroundColor: themeColors[0]
     };
 
-
+    if (this.props.location.state !== undefined) {
     return (
       <div className="App">
       <div className="App-header">
@@ -685,7 +685,15 @@ class Linklist extends Component {
 
 
       </div>
+    
     );
+    } else {
+      return (
+        <div className="App">
+          <Redirect to='/login' />
+        </div>
+      )
+    }
   }
 }
 
