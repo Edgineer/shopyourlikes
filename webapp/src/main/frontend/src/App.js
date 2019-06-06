@@ -27,8 +27,6 @@ class App extends Component {
     return (
       <Router>
       <div className="">
-          
-      <Link to="/login">Login Page</Link><br></br>
         
 
         <Route exact path="/" component={Login}/>
