@@ -45,7 +45,7 @@ class Login extends Component {
     //Prevent page from reloading
     event.preventDefault();
 
-    axios.get('/match/' + this.state.username + '/' + this.refs.password.value).then(res => {
+    axios.get('/users/match/' + this.state.username + '/' + this.refs.password.value).then(res => {
 
       if(res.data === '') //If empty string
         alert("Username and Password are not correct.");

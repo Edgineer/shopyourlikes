@@ -27,6 +27,12 @@ class App extends Component {
     return (
       <Router>
       <div className="">
+          
+      {/* Since we always have a way to get back to the login page, I think we should keep this link off.
+          E.g. Log Out button, or the "Have an account?" button
+      <Link to="/login">Login Page</Link><br></br>
+      */}
+
         
 
         <Route exact path="/" component={Login}/>

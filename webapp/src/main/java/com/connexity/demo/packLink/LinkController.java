@@ -15,6 +15,7 @@ public class LinkController {
     @Autowired //creates an instance of the LinkRepository object
     private LinkRepository repository;
 
+    //Thise is a test function, and will not be exposed when we launch
     @GetMapping("/")
     public ResponseEntity<List<Link>> all(){
         return new ResponseEntity<>(repository.findAll(),HttpStatus.OK);

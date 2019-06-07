@@ -20,7 +20,7 @@ class InstagramSignup extends Component {
     event.preventDefault();
 
     //Ask the backend if the username already exists
-    axios.get('/checkUsername/' + this.refs.newUsername.value).then(res => {
+    axios.get('/users/checkUsername/' + this.refs.newUsername.value).then(res => {
       //res is the response we got from the backend, a JSON containing a boolean
       if(res.data)
         alert("Username already exists!"); 
@@ -37,7 +37,7 @@ class InstagramSignup extends Component {
         "hash": this.refs.newPassword.value};
 
         //Make the post request
-        axios.post('/' + this.state.instaToken, userInfo).then(res => {
+        axios.post('/users/' + this.state.instaToken, userInfo).then(res => {
             
             if(res.data === ''){
                 alert("The username you gave does not match your Instagram username. Usernames are case-sensitive");

@@ -40,7 +40,9 @@ class Linklist extends Component {
         savedButtonStyle: true,
         themeSelected: 0, 
         savedTheme: 0,
+        authToken: ""
     };
+
 
     this.handleThemeOptions = this.handleThemeOptions.bind(this);
     this.handlePhotoOptions = this.handlePhotoOptions.bind(this);
@@ -76,7 +78,7 @@ class Linklist extends Component {
         "priority": this.state.linklist.length + 1
       };
 
-      axios.post(MESSAGE_URL + "/", userLink)
+      axios.post(MESSAGE_URL + "/", userLink, {headers: {"Authorization" : `${this.state.authToken}`}})
         .then(res => {
           this.setState({title : "", url: ""});
           this.fetchMessage();
@@ -88,6 +90,7 @@ class Linklist extends Component {
     //  this.setState({title : "", url: ""});
     //  this.fetchMessage();
     //} 
+
   }
 
   handleUpdatePriorityUp(linkObject) {
@@ -112,7 +115,7 @@ class Linklist extends Component {
           userLink.priority = this.state.linklist[i].priority;
         }
 
-        axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {
+        axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink, {headers: {"Authorization" : `${this.state.authToken}`}}).then( res => {
           count++;
           if (count === this.state.linklist.length) {
             this.fetchMessage();
@@ -174,7 +177,7 @@ class Linklist extends Component {
           userLink.priority = this.state.linklist[i].priority;
         }
 
-        axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {
+        axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink, {headers: {"Authorization" : `${this.state.authToken}`}}).then( res => {
           count++;
           if (count === this.state.linklist.length) {
             this.fetchMessage();
@@ -235,7 +238,7 @@ class Linklist extends Component {
       }
     }   
 
-    axios.delete(MESSAGE_URL +  "/" + sendID)
+    axios.delete(MESSAGE_URL +  "/" + sendID, {headers: {"Authorization" : `${this.state.authToken}`}})
       .then(res => {
 
         for (let i = 0; i < this.state.linklist.length; i++) {
@@ -247,15 +250,50 @@ class Linklist extends Component {
             "priority": i + 1
           };
 
-          axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink).then( res => {});
+          axios.put(MESSAGE_URL + "/" + this.state.linklist[i]._id, userLink, {headers: {"Authorization" : `${this.state.authToken}`}}).then( res => {});
 
         }
         this.fetchMessage();
       })
   }
 
+  //Grab the token from local storage and check if valid
   async componentDidMount() {
+
     this.fetchMessage();
+
+
+    //Grab the token from local storage
+    var authenticationToken = localStorage.getItem('token');
+
+    //Check if token is missing
+    if(authenticationToken === null){
+      alert("Please login again!");
+      this.props.history.push({pathname: "/"});
+    }
+
+    //Check if token will expire soon
+    var EXP_MS_LEEWAY = 100000000; //How far in advance before expiration we should get new token, in ms
+    var d = new Date();
+    var ms = d.getTime();
+    var tokenArray = authenticationToken.split(".")
+    var tokenExp = tokenArray[2].substr(0, tokenArray[2].length-1);
+
+    //If expired, delete token and go login screen
+    if(Number(tokenExp) < ms ){
+      alert("Please login again!");
+      localStorage.removeItem("token");
+      this.props.history.push({pathname: "/"});
+    }
+
+    //If near expiration, redirect to login screen
+    if(Number(tokenExp) < ms + EXP_MS_LEEWAY){
+      alert("Please login again!");
+      this.props.history.push({pathname: "/"});
+    }
+
+    this.setState({ authToken: authenticationToken });
+
   }
 
   async fetchMessage() {
@@ -269,7 +307,7 @@ class Linklist extends Component {
 
     //get settings info
     try {
-      const DBsettings = await axios.get("/" + this.props.location.state.userVal);
+      const DBsettings = await axios.get("/users/get/" + this.props.location.state.userVal, {headers: {"Authorization" : `${this.state.authToken}`}});
       this.setState({
         userInfo: DBsettings.data,
         savedButtonStyle: DBsettings.data.buttonstyle,
@@ -364,7 +402,7 @@ class Linklist extends Component {
 
 
     //alert(JSON.stringify(userLink, null, 4));
-    axios.put("/settings/" + this.state.userInfo._id, newSettings)
+    axios.put("/users/settings/" + this.state.userInfo._id, newSettings, {headers: {"Authorization" : `${this.state.authToken}`}})
       .then(res => {
         this.fetchMessage();
       }).catch(function(error){
@@ -447,8 +485,14 @@ class Linklist extends Component {
 
   //Handles when the user clicks the sign-out button
   handleSignout(event){
-    localStorage.removeItem("token");
-    this.props.history.push({pathname: "/"});
+    var token = this.state.authToken; //We want to remove the " at the beginning and end of token
+    axios.get( "/users/logout/" + token.substr(1, token.length - 2), {headers: {"Authorization" : `${this.state.authToken}`}})
+      .then(res => {
+        localStorage.removeItem("token");
+        this.props.history.push({pathname: "/"});
+      }).catch(function(error) {
+        // console.log("failed to add a new link")
+      });
   }
 
   getTheme(index) {
