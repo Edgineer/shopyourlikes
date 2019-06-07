@@ -31,10 +31,9 @@ public class TokenController {
     @GetMapping("/create/{username}")
     String createToken(@PathVariable(value="username") String username){
 
-        System.out.println("creating token");
 
         //In milliseconds, how long a token will last before expiring
-        long EXP_MS = 200000000;
+        long EXP_MS = 600000000; //More than a week of ms
         long expiration = System.currentTimeMillis() + EXP_MS;
 
         //Generate a random key
@@ -50,7 +49,6 @@ public class TokenController {
 
     @GetMapping("/delete/{token}")
     Boolean deleteToken(@PathVariable(value="token") String token){
-        System.out.println("Deleting token: " + token);
 
         String[] tokenSplit = token.split("\\.");
         repository.deleteByUsername(tokenSplit[0]);
@@ -59,7 +57,6 @@ public class TokenController {
 
     @GetMapping("/check/{token}")
     String checkToken(@PathVariable(value="token") String token){
-        System.out.println("Checking token: " + token);
 
         String[] tokenSplit = token.split("\\.");
 

@@ -34,20 +34,16 @@ public class TokenFilter implements Filter {
          //Check if auth token is valid
          String token = httpRequest.getHeader("Authorization");
          String tokenChop = token.substring(1, token.length()-1); //We can't send " over http
-         System.out.println("FILTER token: " + tokenChop);
-
          String tokenCheck = "";
          try{
             tokenCheck = getRequest("http://localhost:8080/tokens/check/" + tokenChop);
          } catch (Exception e){
             e.printStackTrace();
          }
-         System.out.println("FILTER tokencheck: " + tokenCheck);
       
 
          //If token and request are valid, route traffic
          if(tokenCheck.equals("true")){
-            System.out.println("FILTER Passing query");
             filterchain.doFilter(request, response);
          } else{
             //The token and request were not valid, so we don't route the request
@@ -55,11 +51,10 @@ public class TokenFilter implements Filter {
          }
       } else if(check.equals(1)){
          //The token and request were not valid, so we don't route the request
-            System.out.println("FILTER Stopping query");
+         System.out.println("FILTER Stopping query");
 
       } else if (check.equals(0)){
          //The endpoint was not protected, so route the request
-         System.out.println("FILTER Passing out w/ no processing");
          filterchain.doFilter(request, response);
       }
    }
@@ -89,21 +84,12 @@ public class TokenFilter implements Filter {
       String uri = request.getRequestURI();
       String method = request.getMethod();
 
-      System.out.println("CHECKREQUEST uri: " + uri);
-      System.out.println("CHECKREQUEST method: " + method);
-
       String[] uriSplit = uri.split("/");
       int length = uriSplit.length;
 
       if(uri.matches("^/links/.*")){
          if(method.equals("POST")){
-            /* 
-            String username = request.getHeader("username");
-            if (uriSplit[0].equals(username)){
-               return 2;
-            }
-            return 0;
-            */
+            
 
             return 2;
 
@@ -119,7 +105,16 @@ public class TokenFilter implements Filter {
          }
 
       } else if(uri.matches("^/users/get/.*")){
-         return 2;
+         
+            String token = request.getHeader("Authorization");
+            String tokenChop = token.substring(1, token.length()-1);
+            String[] tokenSplit = tokenChop.split("\\.");
+
+            if (uriSplit[3].equals(tokenSplit[0])){
+               return 2;
+            }
+            return 0;
+            
 
       } else if(uri.matches("^/users/settings/.*")){
          return 2;
