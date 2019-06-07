@@ -15,7 +15,7 @@ class InstagramLogin extends Component {
 
     async getUsername() {
 
-    axios.get('/instaMatch/' + this.state.token).then(res => {
+    axios.get('/users/instaMatch/' + this.state.token).then(res => {
 
       if(res.data === ''){
         alert("Instagram username does not match any of our usernames!");

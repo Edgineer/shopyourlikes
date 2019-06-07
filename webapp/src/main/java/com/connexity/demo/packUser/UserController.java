@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
     @Autowired //creates an instance of the LinkRepository object
     private UserRepository repository;
 
+    //Thise is a test function, and will not be exposed when we launch
     @GetMapping("/")
     public ResponseEntity<List<User>> all(){
         return new ResponseEntity<>(repository.findAll(),HttpStatus.OK);
@@ -38,7 +40,7 @@ public class UserController {
         String instaUsername = "";
         String instagramUrl = "https://api.instagram.com/v1/users/self/?access_token=" + instaToken;
         try{
-            String instaResponse = instagramGet(instagramUrl);
+            String instaResponse = getRequest(instagramUrl);
             instaUsername = instaUsername(instaResponse);
         } catch (Exception e){
             e.printStackTrace();
@@ -73,13 +75,13 @@ public class UserController {
 
     //Checks if username and password match
     @GetMapping("/match/{username}/{password}")
-    String checkUsername(@PathVariable(value="username") String username, @PathVariable(value="password") String password){
+    String login(@PathVariable(value="username") String username, @PathVariable(value="password") String password){
 
         int count = repository.countByUsernameIgnoreCase(username);
         if(count > 0){
             User user = repository.findByUsernameAndHashIgnoreCase(username, hashPassword(password));
             if(user != null){
-                String token = getToken(user.getUsername());
+                String token = createToken(user.getUsername());
                 return token;
             }
             else 
@@ -87,6 +89,17 @@ public class UserController {
         }
         else 
             return "";
+    }
+
+    //Delete the authentication token from token repository
+    @GetMapping("/logout/{token}")
+    void logout(@PathVariable(value="token") String token){
+
+        try{
+            getRequest("http://localhost:8080/tokens/delete/" + token);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -99,7 +112,7 @@ public class UserController {
 
         String instagramUrl = "https://api.instagram.com/v1/users/self/?access_token=" + instaToken;
         try{
-            String instaResponse = instagramGet(instagramUrl);
+            String instaResponse = getRequest(instagramUrl);
             instaUsername = instaUsername(instaResponse);
         } catch (Exception e){
             e.printStackTrace();
@@ -108,16 +121,29 @@ public class UserController {
 
             User user = repository.findByUsernameIgnoreCase(instaUsername);
             if(user != null){
-                String token = getToken(user.getUsername());
+                String token = createToken(user.getUsername());
                 return token;
             }
             else 
                 return "";
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/get/{username}")
     User getUsername(@PathVariable(value="username") String username){
-       return repository.findByUsernameIgnoreCase(username);
+        return repository.findByUsernameIgnoreCase(username);
+    }
+
+    //Same as above, but for the public page, so the front doesn't get info like user's password
+    //Unlike the one above, this endpoint is not protected by the filter
+    @GetMapping("/protected/{username}")
+    User getUsernameProtected(@PathVariable(value="username") String username){
+        User user = repository.findByUsernameIgnoreCase(username);
+        user.setFirstname("");
+        user.setLastname("");
+        user.setUsername("");
+        user.setEmail("");
+        user.setHash("");
+        return user;
     }
 
     @PutMapping("/settings/{id}")
@@ -141,18 +167,24 @@ public class UserController {
     
     private String hashPassword(String password)
     {
+
         String hashPlaceholder = password;
         return hashPlaceholder;
     }
 
-    private String getToken(String username)
+    private String createToken(String username)
     {
-        String tokenPlaceholder = "#" + username + "#TOKEN";
-        return tokenPlaceholder;
+        String tokenResponse = "";
+        try{
+            tokenResponse = getRequest("http://localhost:8080/tokens/create/" + username);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return tokenResponse;
     }
 
     //From https://stackoverflow.com/questions/1485708/how-do-i-do-a-http-get-in-java
-    private String instagramGet(String urlToRead) throws Exception {
+    private String getRequest(String urlToRead) throws Exception {
       StringBuilder result = new StringBuilder();
       URL url = new URL(urlToRead);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -171,8 +203,7 @@ public class UserController {
        JSONObject dataObject = jObject.getJSONObject("data");
        String username = dataObject.getString("username");
        return username;
-   }
-   
+   }   
 }
 
 

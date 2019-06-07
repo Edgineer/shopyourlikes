@@ -47,7 +47,7 @@ class Tree extends Component {
           } 
 
         try {
-            const DBsettings = await axios.get("/" + this.username)
+            const DBsettings = await axios.get("/users/protected/" + this.username)
             this.setState({
                 textColor: DBsettings.data.textcolor,
                 buttonStyle: DBsettings.data.buttonstyle,
