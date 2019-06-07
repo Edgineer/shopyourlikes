@@ -522,6 +522,7 @@ class Linklist extends Component {
     return (
       <div className="App">
       <div className="App-header">
+        <br/>
         <img src={logo} alt="ShopYourLikes"/>
         <h1>{this.props.location.state.userVal}</h1>
       </div>
