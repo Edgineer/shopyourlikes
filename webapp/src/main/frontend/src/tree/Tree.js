@@ -30,6 +30,7 @@ class Tree extends Component {
             buttonStyle: true,
             renderPhotoBackground: true,
             theme: 0,
+            validUser: false
         };
     }
 
@@ -40,8 +41,14 @@ class Tree extends Component {
     async getUserInfo() {
         try {
             //response.data contains an array of JavaScript objects
-              const response = await axios.get(MESSAGE_URL + "/" + this.username);
-              this.setState({listOfLinks: response.data});
+            try {
+                const validUser = await axios.get("/checkUsername/" + this.username)
+                this.setState({validUser: validUser.data});
+            } catch (error) {
+                this.setState({error: "Could not check user!"});
+            } 
+            const response = await axios.get(MESSAGE_URL + "/" + this.username);
+            this.setState({listOfLinks: response.data});
           } catch (error) {
               this.setState({error: "Error!"});
           } 
@@ -120,6 +127,8 @@ class Tree extends Component {
     getLogo() {
         if (this.state.textColor /*TODO*/) {
             return darkLogo
+        } else if (!this.state.validUser) {
+            return darkLogo
         }
         else {
             return whiteLogo
@@ -168,28 +177,38 @@ class Tree extends Component {
             };
         }
         
-
-        return (
-            <div style={backgroundStyle} id="Background">
-                <br/>
-                <h3 style={this.usernameColor()} id="Username" > @{this.username}</h3>
-                <div className="link-container">
-                {this.state.listOfLinks.map(function(name, index){
-                    let linkStyle = {
-                        backgroundColor: getColor(),
-                    }
-                    return (
-                        <a href={name.url}><div style={linkStyle} className="Link-box" key={index}>{name.title}</div></a>
-                        );
-                })}
-                </div>
-                <br/>
-                <br/>
-                <div id="Logo">
-                    <img src={this.getLogo()} alt="ShopYourLikes"/>
-                </div>
+        if (!this.state.validUser) {
+            return (<div style={backgroundStyle} id="Background">
+            <h3 id="Error">
+            Sorry! That user doesn't exist :'(
+            </h3>
+            <div id="Logo">
+                <img src={this.getLogo()} alt="ShopYourLikes"/>
             </div>
-        );
+        </div>)
+        } else {
+            return (
+                <div style={backgroundStyle} id="Background">
+                    <br/>
+                    <h3 style={this.usernameColor()} id="Username" > @{this.username}</h3>
+                    <div className="link-container">
+                    {this.state.listOfLinks.map(function(name, index){
+                        let linkStyle = {
+                            backgroundColor: getColor(),
+                        }
+                        return (
+                            <a href={name.url}><div style={linkStyle} className="Link-box" key={index}>{name.title}</div></a>
+                            );
+                    })}
+                    </div>
+                    <br/>
+                    <br/>
+                    <div id="Logo">
+                        <img src={this.getLogo()} alt="ShopYourLikes"/>
+                    </div>
+                </div>
+            );
+        }
     }
 }
 

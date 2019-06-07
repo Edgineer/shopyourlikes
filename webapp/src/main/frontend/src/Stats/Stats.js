@@ -5,7 +5,7 @@ import './Stats.css';
 import ClicksPerDay from './ClicksPerDay.js';
 import ClicksPerLink from './ClicksPerLink.js';
 import ClicksPerRegion from './ClicksPerRegion.js';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import axios from "axios/index";
 import './../App.css';
 import logoColor from ".././img/logoColor.svg"
@@ -17,7 +17,7 @@ class Stats extends Component {
     super(props);
     //get the passed in username and set it to a variable
     const {match: {params }} = this.props;
-    this.username = params.user;
+    //this.username = this.props.location.state.userVal;
     this.state = {
       username: "",
       listOfLinks: [],
@@ -31,7 +31,8 @@ class Stats extends Component {
 
 
   componentDidMount(){
-      fetch("/links/" + this.username)
+    if (this.props.location.state !== undefined) {
+      fetch("/links/" + this.props.location.state.userVal)
         .then(res => res.json())
         .then(
             (result) => {
@@ -46,6 +47,7 @@ class Stats extends Component {
                 console.log(titlesArr)
                 console.log(clicksArr)
                 this.setState({
+                username: this.props.location.state.userVal,
                 listOfLinks: arr,
                 linkTitles: titlesArr,
                 ClicksPerLinkData: {
@@ -87,6 +89,7 @@ class Stats extends Component {
             }
         )
       this.getData();
+    }
   }
 
 
@@ -125,6 +128,7 @@ class Stats extends Component {
 
 
 
+    
    render() {
     console.log(this.state.loading)
     let data;
@@ -135,7 +139,7 @@ class Stats extends Component {
         data =
             <div className="Login-title">
                 <div className="App-header">
-                    <h3>Click Statistics for {this.username} </h3>
+                    <h3>Click Statistics for {this.props.location.state.userVal} </h3>
                 </div>
                 <div className="ClicksPerDay-box">
                 <ClicksPerLink ClicksPerLinkData={this.state.ClicksPerLinkData} />
@@ -151,11 +155,19 @@ class Stats extends Component {
 
             </div>
     }
+    if (this.props.location.state !== undefined) {
     return(
         <div>
             {data}
         </div>
     );
+    } else {
+        return (
+            <div className="App">
+              <Redirect to='/login' />
+            </div>
+          )
+    }
     }
 
   }

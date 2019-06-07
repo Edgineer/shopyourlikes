@@ -636,7 +636,7 @@ class Linklist extends Component {
           <h3>Other Pages</h3>
           <Link to={`/tree/${this.props.location.state.userVal}`}><button type="button" className="extern-view">See Link Page</button></Link>
           <br/><br/>
-          <Link to={`/stats/${this.props.location.state.userVal}`}><button type="button" className="extern-view">Statistics Report</button></Link>
+          <Link to={{pathname: `/stats/${this.props.location.state.userVal}`, state: {userVal: this.props.location.state.userVal}}}><button type="button" className="extern-view">Statistics Report</button></Link>
         </div>
         
         <br/>
