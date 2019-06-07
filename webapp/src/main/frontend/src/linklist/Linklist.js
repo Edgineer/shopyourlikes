@@ -699,7 +699,6 @@ class Linklist extends Component {
     
     );
     } else {
-      alert("Darn")
       return (
         <div className="App">
           <Redirect to='/login' />
