@@ -139,7 +139,7 @@ class Stats extends Component {
         data =
             <div className="Login-title">
                 <div className="App-header">
-                    <h3>Click Statistics for {this.props.location.state.userVal} </h3>
+                    <h1 >Click Statistics for {this.props.location.state.userVal} </h1>
                 </div>
                 <div className="ClicksPerDay-box">
                 <ClicksPerLink ClicksPerLinkData={this.state.ClicksPerLinkData} />

@@ -4,6 +4,7 @@ import axios from "axios/index";
 import './../App.css';
 import './Linklist.css';
 import logo from "./../img/logoColor.svg"
+import branchLogo from ".././img/branchly_shopyourlikes.svg"
 import logoTrash from "./../img/icons_trash.png";
 import logoUp from "./../img/icons_up.png";
 import logoDown from "./../img/icons_down.png";
@@ -61,22 +62,32 @@ class Linklist extends Component {
   }
 
   handleAddLinkSubmit = event => {
-    event.preventDefault();
 
-    const userLink = {
-      "username": this.props.location.state.userVal,
-      "title": this.state.title,
-      "url": this.state.url,
-      "priority": this.state.linklist.length + 1
-    };
+    //if (this.state.url.indexOf("https://") == 0) {
 
-    axios.post(MESSAGE_URL + "/", userLink)
-      .then(res => {
-        this.setState({title : "", url: ""});
-        this.fetchMessage();
-      }).catch(function(error) {
-        // console.log("failed to add a new link")
-      });
+      event.preventDefault();
+
+    if (this.state.url.indexOf("https://") == 0) {
+
+      const userLink = {
+        "username": this.props.location.state.userVal,
+        "title": this.state.title,
+        "url": this.state.url,
+        "priority": this.state.linklist.length + 1
+      };
+
+      axios.post(MESSAGE_URL + "/", userLink)
+        .then(res => {
+          this.setState({title : "", url: ""});
+          this.fetchMessage();
+        }).catch(function(error) {
+          // console.log("failed to add a new link")
+        });
+    } 
+    //else {
+    //  this.setState({title : "", url: ""});
+    //  this.fetchMessage();
+    //} 
   }
 
   handleUpdatePriorityUp(linkObject) {
@@ -522,9 +533,8 @@ class Linklist extends Component {
     return (
       <div className="App">
       <div className="App-header">
-        <br/>
-        <img src={logo} alt="ShopYourLikes"/>
-        <h1>{this.props.location.state.userVal}</h1>
+        <img class="resize" src={branchLogo} alt="ShopYourLikes"/>
+        <h1 class="username">{this.props.location.state.userVal}</h1>
       </div>
 
       {/* left side */}
@@ -689,6 +699,7 @@ class Linklist extends Component {
     
     );
     } else {
+      alert("Darn")
       return (
         <div className="App">
           <Redirect to='/login' />

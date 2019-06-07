@@ -3,6 +3,7 @@ import logo from './../logo.svg';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import Linklist from ".././linklist/Linklist"
 import logoColor from ".././img/logoColor.svg"
+import branchLogo from ".././img/branchly_shopyourlikes.svg"
 import instagram_logo from "./instagram_logo.svg"
 import './../App.css';
 import './Login.css';
@@ -69,7 +70,7 @@ class Login extends Component {
       return (
         <div className="Login-title">
           <ul className="Login-box">
-            <img id="Login-logo" src={logoColor} alt="ShopYourLikes"/>
+            <img clas="resize" id="Login-logo" src={branchLogo} alt="ShopYourLikes"/>
             <hr width="87%" align="left"/>
 
             <div display="inline-block">
@@ -103,7 +104,7 @@ class Login extends Component {
       return (
         <div className="Login-title">
           <ul className="Signup-box">
-            <img id="Login-logo" src={logoColor} alt="ShopYourLikes"/>
+            <img id="Login-logo" src={branchLogo} alt="ShopYourLikes"/>
             <hr width="87%" align="left"/>
             <div display="inline-block">
               {/* <div className="instagram-text">Login with Instagram</div> */}

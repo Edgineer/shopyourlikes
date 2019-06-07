@@ -78,6 +78,11 @@
     left: 20px;
 }
 
+.username {
+    position: relative;
+    margin-top: 0px;
+}
+
 #buttonStyle {
     position: relative;
     width: 300px;
@@ -198,7 +203,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: calc(10px + 1vmin);
+    font-size: calc(7px + 1vmin);
     color: white;
     z-index: -1;
   }
@@ -236,3 +241,8 @@
     height: 25px;
     width: 25px;
   }
+
+  img.resize { 
+    max-width: 15%;
+    max-height: 15%;
+}

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from "axios/index";
 import './Tree.css';
-import darkLogo from './../img/logo dark.svg';
-import whiteLogo from './../img/logoColor.svg'
+import darkLogo from '.././img/branchly_shopyourlikes_black.svg';
+import whiteLogo from '.././img/branchly_shopyourlikes.svg'
 
 const MESSAGE_URL = "/links";
 
